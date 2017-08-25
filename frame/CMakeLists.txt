@@ -5,6 +5,7 @@ AUX_SOURCE_DIRECTORY(./src SRC_LIST)
 
 SET(EXECUTABLE_OUTPUT_PATH ./bin)
 
+add_compile_options(-std=c++11)
 ADD_DEFINITIONS(-g -O0 -W -Wall -Wno-unused -DLINUX -Werror=return-type -Werror=nonnull -Werror=invalid-offsetof -Wno-deprecated ${CMAKE_CXX_FLAGS})
 
 INCLUDE_DIRECTORIES(
@@ -18,4 +19,4 @@ LINK_DIRECTORIES(
 
 ADD_EXECUTABLE(frame ${SRC_LIST})
 
-TARGET_LINK_LIBRARIES(frame pthread)
+TARGET_LINK_LIBRARIES(frame pthread tinyxml2)

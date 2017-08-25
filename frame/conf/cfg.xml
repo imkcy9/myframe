@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+
+    <!-- 
+            服务配置:
+            logdir     : 日志目录 
+            logprefix  : 日志文件名
+            logPriority : 日志等级(7~14)，数值越低，日志越详细 TRACE:7  DEBUG:8  INFO:9  USER1:10  USER2:11  WARNING:12  ERROR:13  CRITICAL:14
+            runlog     : 运行日志 1 : 开起; 0 : 关闭
+    -->
+    <basic logdir = "../log/" logprefix = "stockpull" logPriority="8" runlog = "1"/>
+
+    <!-- 
+            数据库配置
+            host:     IP地址
+            port:     端口
+            database: 数据库实例
+            username: 用户名
+            password: 密码
+    -->
+    <mysqlconn dbip="192.168.19.192" dbport="3306" readtimeout="4000" username="tradepro" passwd="trading" dbname="stockquote"/>
+    
+</config>

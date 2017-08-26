@@ -27,6 +27,14 @@
 #define DECLARE_CONFIG_GETINT(rootnode,childnode,element) int get_##childnode##_##element(){\
             return doc.FirstChildElement(#rootnode)->FirstChildElement(#childnode)->IntAttribute(#element);\
             }\
+
+#define DECLARE_CONFIG_GETINT64(rootnode,childnode,element) int get_##childnode##_##element(){\
+            return doc.FirstChildElement(#rootnode)->FirstChildElement(#childnode)->Int64Attribute(#element);\
+            }\
+            
+#define DECLARE_CONFIG_GETFLOAT(rootnode,childnode,element) int get_##childnode##_##element(){\
+            return doc.FirstChildElement(#rootnode)->FirstChildElement(#childnode)->FloatAttribute(#element);\
+            }\
             
 using namespace tinyxml2;
 
@@ -44,15 +52,22 @@ public:
         return err == XMLError::XML_SUCCESS;
     }
     //add defines here 
-    DECLARE_CONFIG_GETSTR(config,basic,logdir)
+    DECLARE_CONFIG_GETSTR(config,basic,logfile)
     DECLARE_CONFIG_GETINT(config,basic,logPriority)
 
+    DECLARE_CONFIG_GETSTR(config,mysqlconn,dbip)
+    DECLARE_CONFIG_GETINT(config,mysqlconn,dbport)
+    DECLARE_CONFIG_GETINT(config,mysqlconn,readtimeout)
+    DECLARE_CONFIG_GETSTR(config,mysqlconn,username)
+    DECLARE_CONFIG_GETSTR(config,mysqlconn,passwd)
+    DECLARE_CONFIG_GETSTR(config,mysqlconn,dbname)
 private:
 
     config() {
     }
 
     virtual ~config() {
+        doc.Clear();
     }
     std::string file_name;
     XMLDocument doc;

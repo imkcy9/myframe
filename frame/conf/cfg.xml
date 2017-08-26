@@ -3,11 +3,11 @@
 
     <!-- 
             服务配置:
-            logdir     : 日志目录/文件名
+            logdir     : 日志目录+文件名
 
             logPriority : 日志等级(7~14)，数值越低，日志越详细 TRACE:0  DEBUG:1  INFO:2 WARNING:3  ERROR:4  CRITICAL:5 OFF:6
     -->
-    <basic logdir = "../log/stockpull" logPriority="1"/>
+    <basic logfile = "../log/stockpull" logPriority="0"/>
 
     <!-- 
             数据库配置

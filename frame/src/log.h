@@ -15,19 +15,19 @@
 #define LOG_H
 #include "spdlog/spdlog.h"
 
-#define LOG_TRACE(...) spdlog::get("logger")->trace(__VA_ARGS__)
-#define LOG_DEBUG(...) spdlog::get("logger")->debug(__VA_ARGS__)
-#define LOG_INFO(...) spdlog::get("logger")->info(__VA_ARGS__)
-#define LOG_WARN(...) spdlog::get("logger")->warn(__VA_ARGS__)
-#define LOG_ERROR(...) spdlog::get("logger")->error(__VA_ARGS__)
-#define LOG_CRITICAL(...) spdlog::get("logger")->critical(__VA_ARGS__)
-namespace logger {
+#define LOG_TRACE(...) spdlog::get("Log")->trace(__VA_ARGS__)
+#define LOG_DEBUG(...) spdlog::get("Log")->debug(__VA_ARGS__)
+#define LOG_INFO(...) spdlog::get("Log")->info(__VA_ARGS__)
+#define LOG_WARN(...) spdlog::get("Log")->warn(__VA_ARGS__)
+#define LOG_ERROR(...) spdlog::get("Log")->error(__VA_ARGS__)
+#define LOG_CRITICAL(...) spdlog::get("Log")->critical(__VA_ARGS__)
+namespace LOGGER {
     void init(bool is_daemon,int level,const char* log_path) {
         if(!is_daemon) {
-            spdlog::stdout_color_mt("logger");
+            spdlog::stdout_color_mt("Log");
             
         } else {
-            spdlog::daily_logger_mt("logger",log_path, 2, 30);
+            spdlog::daily_logger_mt("Log",log_path, 2, 30);
         }
         spdlog::set_level((spdlog::level::level_enum)level);
         

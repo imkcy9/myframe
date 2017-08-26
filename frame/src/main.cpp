@@ -28,22 +28,20 @@ int main(int argc, char** argv) {
     bool isdaemon = false;
     init_main(argc,argv,isdaemon);
     
-    spdlog::
     //init configure
     bool ret = config::Instance()->load_file(g_configfilename);
     if(!ret) {
         return -1;
     }
-    LOG_INFO("hello 3333 {}","777");
+    //LOG_INFO("hello 3333 {}","777");
     //init logger
-    logger::init(isdaemon,config::Instance()->get_basic_logPriority(),config::Instance()->get_basic_logdir());
-    
+    LOGGER::init(isdaemon,config::Instance()->get_basic_logPriority(),config::Instance()->get_basic_logfile());
     
     
     
     XMLDocument doc;
     XMLError err = doc.LoadFile( "../conf/cfg.xml" );
-    const char* str = doc.FirstChildElement("config")->FirstChildElement("basic")->Attribute("logdir");
+    const char* str = doc.FirstChildElement("config")->FirstChildElement("basic")->Attribute("logfile");
     LOG_INFO("hello {}",str);
     LOG_DEBUG("hello {}",str);
     LOG_WARN("hello {}",str);

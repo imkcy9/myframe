@@ -13,9 +13,8 @@
 
 #include <cstdlib>
 #include <signal.h>
-#include <unistd.h>
-#include <fcntl.h>
 #include "config.h"
+#include "spdlog/spdlog.h"
 #include "log.h"
 using namespace std;
 
@@ -29,12 +28,13 @@ int main(int argc, char** argv) {
     bool isdaemon = false;
     init_main(argc,argv,isdaemon);
     
+    spdlog::
     //init configure
     bool ret = config::Instance()->load_file(g_configfilename);
     if(!ret) {
         return -1;
     }
-    //LOG_INFO("hello 3333 {}","777");
+    LOG_INFO("hello 3333 {}","777");
     //init logger
     logger::init(isdaemon,config::Instance()->get_basic_logPriority(),config::Instance()->get_basic_logdir());
     

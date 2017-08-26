@@ -13,7 +13,7 @@
 
 #ifndef CONFIG_H
 #define CONFIG_H
-#include "../../public/include/tinyxml2.h"
+#include "tinyxml2.h"
 #include <string>
 
 #define DECLARE_CONFIG_GETSTR(rootnode,childnode,element) inline const char* get_##childnode##_##element(){\

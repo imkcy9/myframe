@@ -13,7 +13,7 @@
 
 #ifndef LOG_H
 #define LOG_H
-#include "../../public/include/spdlog/spdlog.h"
+#include "spdlog/spdlog.h"
 
 #define LOG_TRACE(...) spdlog::get("logger")->trace(__VA_ARGS__)
 #define LOG_DEBUG(...) spdlog::get("logger")->debug(__VA_ARGS__)

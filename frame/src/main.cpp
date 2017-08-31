@@ -16,6 +16,7 @@
 #include "config.h"
 #include "spdlog/spdlog.h"
 #include "log.h"
+#include "zmq_poller_reactor.h"
 using namespace std;
 
 /*
@@ -38,6 +39,21 @@ int main(int argc, char** argv) {
     LOGGER::init(isdaemon,config::Instance()->get_basic_logPriority(),config::Instance()->get_basic_logfile());
     
     
+    zmq::context_t ctx;
+    zmq_poller_reactor reactor(&ctx);
+    
+    zmq::socket_t signal(ctx,ZMQ_PUB);
+    signal.bind("inproc://signal");
+
+    reactor.start();
+    
+    while(true) {
+        signal.send("killed",7);
+        zmq_sleep(1);
+        LOG_INFO("send kill");
+    }
+    
+    reactor.join();
     
     XMLDocument doc;
     XMLError err = doc.LoadFile( "../conf/cfg.xml" );

@@ -22,16 +22,7 @@
 #define LOG_ERROR(...) spdlog::get("Log")->error(__VA_ARGS__)
 #define LOG_CRITICAL(...) spdlog::get("Log")->critical(__VA_ARGS__)
 namespace LOGGER {
-    void init(bool is_daemon,int level,const char* log_path) {
-        if(!is_daemon) {
-            spdlog::stdout_color_mt("Log");
-            
-        } else {
-            spdlog::daily_logger_mt("Log",log_path, 2, 30);
-        }
-        spdlog::set_level((spdlog::level::level_enum)level);
-        
-    }
+    void init(bool is_daemon,int level,const char* log_path);
 }
 
 #endif /* LOG_H */

@@ -12,6 +12,8 @@
  */
 
 #include <cstdlib>
+#include <unistd.h>
+#include <fcntl.h>
 #include <signal.h>
 #include "config.h"
 #include "spdlog/spdlog.h"
@@ -28,6 +30,10 @@ char g_configfilename[128];
 int main(int argc, char** argv) {
     bool isdaemon = false;
     init_main(argc,argv,isdaemon);
+    
+    char buffer[100];
+    getcwd(buffer, sizeof(buffer));
+    printf("The current directory is: %s\n", buffer);
     
     //init configure
     bool ret = config::Instance()->load_file(g_configfilename);

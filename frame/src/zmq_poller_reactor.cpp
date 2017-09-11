@@ -29,14 +29,21 @@ bool zmq_poller_reactor::init_before_start() {
 }
 
 void zmq_poller_reactor::run() {
-
+    timers_add(10,2000);
+    timers_add(99,500);
     zmq::pollitem_t items[] = {
         {0, m_mailbox.get_fd(), ZMQ_POLLIN, 0}
     };
     bool stop = false;
     while (!stop) {
         zmq::message_t message;
-        int rc = zmq::poll(items, 1, 2000);
+        
+        long wait_time = timers_timeout();
+        if(wait_time == 0) {
+            timers_execute();
+            wait_time = timers_timeout();
+        }
+        int rc = zmq::poll(items, 1, wait_time);
         if (rc == 0) {
             LOG_INFO("timer out ");
             continue;
@@ -74,6 +81,8 @@ void zmq_poller_reactor::event_handler() {
     LOG_INFO("signal ddddddddddddddddddddddddd{}", (char*) msg.data());
 }
 
-
+void zmq_poller_reactor::timer_event(int id_) {
+    LOG_WARN("timer id {}",id_);
+}
 
 

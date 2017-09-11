@@ -2,15 +2,17 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.6)           # CMake 最低版本要求，低�
 PROJECT(frame)
 
 AUX_SOURCE_DIRECTORY(./src SRC_LIST)
+AUX_SOURCE_DIRECTORY(../public/src/timer SRC_LIST)
 
 SET(EXECUTABLE_OUTPUT_PATH ./bin)
 
 add_compile_options(-std=c++11)
-ADD_DEFINITIONS(-g -O0 -W -Wall -Wno-unused -DLINUX -Werror=return-type -Werror=nonnull -Werror=invalid-offsetof -Wno-deprecated ${CMAKE_CXX_FLAGS})
+ADD_DEFINITIONS(-g -O0 -W -Wall -Wno-unused -DZMQ_BUILD_DRAFT_API -DLINUX -Werror=return-type -Werror=nonnull -Werror=invalid-offsetof -Wno-deprecated ${CMAKE_CXX_FLAGS})
 
 INCLUDE_DIRECTORIES(
 	./src/
 	../public/include
+        ../public/src/
 )
 
 LINK_DIRECTORIES(
@@ -19,4 +21,4 @@ LINK_DIRECTORIES(
 
 ADD_EXECUTABLE(frame ${SRC_LIST})
 
-TARGET_LINK_LIBRARIES(frame pthread tinyxml2)
+TARGET_LINK_LIBRARIES(frame pthread tinyxml2 zmq uWS ssl z)

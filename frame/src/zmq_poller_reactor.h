@@ -16,6 +16,8 @@
 #include "thread.h"
 #include <zmq.hpp>
 #include "log.h"
+#include "timer/mailbox.h"
+
 class zmq_poller_reactor : public thread {
 public:
     zmq_poller_reactor(zmq::context_t* ctx);
@@ -29,15 +31,16 @@ public:
 
     virtual void release_before_end();
     
-    bool add_socket(zmq::socket_t &socket, std::function<void(void)> &handler);
-
+    void stop();
+    
     void event_handler();
-
+    mailbox_t<char> m_mailbox;
 private:
     zmq::context_t* m_ctx;
     zmq::socket_t m_signal;
     bool m_stop;
     zmq::poller_t poller;
+    
 };
 
 #endif /* ZMQ_POLLER_REACTOR_H */

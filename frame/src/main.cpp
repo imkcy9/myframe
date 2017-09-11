@@ -19,6 +19,7 @@
 #include "spdlog/spdlog.h"
 #include "log.h"
 #include "zmq_poller_reactor.h"
+#include "mdstock_collector.h"
 using namespace std;
 
 /*
@@ -27,6 +28,7 @@ using namespace std;
 void prog_exit(int signo);
 void init_main(int argc, char **argv, bool& isdaemon);
 char g_configfilename[128];
+zmq_poller_reactor* pApp = NULL;
 int main(int argc, char** argv) {
     bool isdaemon = false;
     init_main(argc,argv,isdaemon);
@@ -44,32 +46,31 @@ int main(int argc, char** argv) {
     //init logger
     LOGGER::init(isdaemon,config::Instance()->get_basic_logPriority(),config::Instance()->get_basic_logfile());
     
+    //mdstock_collector clooector;
+    //clooector.start();
+    //clooector.join();
     
     zmq::context_t ctx;
     zmq_poller_reactor reactor(&ctx);
-    
+    pApp = &reactor;
     zmq::socket_t signal(ctx,ZMQ_PUB);
     signal.bind("inproc://signal");
 
     reactor.start();
     
-    while(true) {
-        signal.send("killed",7);
-        zmq_sleep(1);
-        LOG_INFO("send kill");
-    }
+//    while(true) {
+//        char c = 'r';
+//        reactor.m_mailbox.send(c);
+//        zmq_sleep(1);
+//        LOG_INFO("send kill");
+//    }
     
     reactor.join();
     
     XMLDocument doc;
     XMLError err = doc.LoadFile( "../conf/cfg.xml" );
     const char* str = doc.FirstChildElement("config")->FirstChildElement("basic")->Attribute("logfile");
-    LOG_INFO("hello {}",str);
-    LOG_DEBUG("hello {}",str);
-    LOG_WARN("hello {}",str);
-    LOG_ERROR("hello {}",str);
-    LOG_CRITICAL("hello {}",str);
-    LOG_INFO("hello {}",str);
+
     return 0;
 }
 
@@ -119,6 +120,8 @@ void init_main(int argc, char **argv, bool& isdaemon) {
 }
 
 void prog_exit(int /*signo*/) {
+    LOG_WARN("exit");
+    pApp->stop();
     //signal(SIGINT, SIG_IGN);
     //signal(SIGKILL, SIG_IGN);
     //signal(SIGTERM, SIG_IGN);

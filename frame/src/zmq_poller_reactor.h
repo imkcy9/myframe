@@ -24,26 +24,17 @@ public:
     zmq_poller_reactor(zmq::context_t* ctx);
 
     virtual ~zmq_poller_reactor();
-    
-
-    virtual bool init_before_start();
 
     virtual void run();
 
-    virtual void release_before_end();
-    
     virtual void timer_event(int id_);
     
     void stop();
     
-    void event_handler();
     mailbox_t<char> m_mailbox;
 private:
     zmq::context_t* m_ctx;
-    zmq::socket_t m_signal;
     bool m_stop;
-    zmq::poller_t poller;
-
 };
 
 #endif /* ZMQ_POLLER_REACTOR_H */

@@ -49,6 +49,7 @@ public:
     inline bool load_file(const char* filename) {
         file_name = filename;
         XMLError err = doc.LoadFile(filename);
+        doc.PrintError();
         return err == XMLError::XML_SUCCESS;
     }
     //add defines here 

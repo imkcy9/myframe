@@ -14,6 +14,7 @@
 #include "timer.h"
 #include <zmq.h>
 #include <assert.h>
+#include <vector>
 
 void timer_fun(int id_, void *arg) {
     timer* t = (timer*)arg;
@@ -39,6 +40,15 @@ int timer::timers_add(int id_, size_t interval) {
     //assert(vec_fun.size() == id);
     return id;
 }
+
+int timer::timers_cancel(int id_) {
+    for (std::map<int,int>::iterator it = m_timerMap.begin(); it != m_timerMap.end(); it++) {
+        if(it->second == id_) {
+            zmq_timers_cancel(timer_,it->first);
+        }
+    }
+}
+
 
 long timer::timers_timeout() {
     return zmq_timers_timeout(timer_);

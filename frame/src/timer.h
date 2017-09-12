@@ -22,6 +22,7 @@ public:
     timer();
     virtual ~timer();
     int timers_add(int id_, size_t interval);
+    int timers_cancel(int id_);
     long timers_timeout();
     void timers_execute();
     

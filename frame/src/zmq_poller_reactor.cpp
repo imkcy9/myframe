@@ -15,22 +15,14 @@
 
 zmq_poller_reactor::zmq_poller_reactor(zmq::context_t* ctx)
 : m_ctx(ctx)
-, m_signal(*ctx, ZMQ_SUB)
 , m_stop(false) {
 }
 
 zmq_poller_reactor::~zmq_poller_reactor() {
 }
 
-bool zmq_poller_reactor::init_before_start() {
-    m_signal.setsockopt(ZMQ_SUBSCRIBE, "", 0);
-    m_signal.connect("inproc://signal");
-    return true;
-}
-
 void zmq_poller_reactor::run() {
-    timers_add(10,2000);
-    timers_add(99,500);
+
     zmq::pollitem_t items[] = {
         {0, m_mailbox.get_fd(), ZMQ_POLLIN, 0}
     };
@@ -69,16 +61,6 @@ void zmq_poller_reactor::run() {
 void zmq_poller_reactor::stop() {
     char c = 'k';
     m_mailbox.send(c);
-}
-
-void zmq_poller_reactor::release_before_end() {
-
-}
-
-void zmq_poller_reactor::event_handler() {
-    zmq::message_t msg;
-    m_signal.recv(&msg);
-    LOG_INFO("signal ddddddddddddddddddddddddd{}", (char*) msg.data());
 }
 
 void zmq_poller_reactor::timer_event(int id_) {

@@ -13,24 +13,31 @@
 
 #ifndef MDSTOCK_COLLECTOR_H
 #define MDSTOCK_COLLECTOR_H
-#include "thread.h"
 #include "log.h"
 #include <uWS/uWS.h>
-
+#include "thread.h"
+#include <zmq.hpp>
 
 class mdstock_collector : public thread {
 public:
-    mdstock_collector();
+    mdstock_collector(zmq::context_t* ctx);
     
     virtual ~mdstock_collector();
+    
+    void connect(const char* addr);
+    
+    void run() override;
 
-    virtual bool init_before_start();
+    
+    void stop();
 
-    virtual void run();
-
-    virtual void release_before_end();
+    void check_connections_status();
+    
 private:
+
+    void start_md_collector();
     uWS::Hub h;
+    zmq::socket_t m_pub;
 };
 
 #endif /* MDSTOCK_COLLECTOR_H */

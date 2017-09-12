@@ -21,12 +21,16 @@ public:
     void start();
     void join();
 
+    inline bool is_running() {
+        return is_start;
+    }
 private:
     virtual void run() = 0;
     virtual bool init_before_start();
     virtual void release_before_end();
     static void worke_routine(void* arg_);
     void* thread_handler;
+    bool is_start;
 };
 
 #endif /* THREAD_H */

@@ -15,13 +15,18 @@
 #include <zmq.h>
 
 thread::thread()
-: thread_handler(NULL) {
+: thread_handler(NULL)
+,is_start(false) {
 }
 
 thread::~thread() {
 }
 
 void thread::start() {
+    if(is_running())
+        return;
+    
+    is_start = true;
     thread_handler = zmq_threadstart(worke_routine, this);
 }
 
@@ -44,5 +49,6 @@ void thread::worke_routine(void* arg_) {
         ((thread*) arg_)->run();
     }
     ((thread*) arg_)->release_before_end();
+    ((thread*) arg_)->is_start = false;
 }
 

@@ -18,7 +18,7 @@
 #include "thread.h"
 #include <zmq.hpp>
 
-class mdstock_collector : public thread {
+class mdstock_collector : public thread_t {
 public:
     mdstock_collector(zmq::context_t* ctx);
     
@@ -33,11 +33,15 @@ public:
 
     void check_connections_status();
     
+    time_t get_last_time() {
+        return m_last_time;
+    }
 private:
 
     void start_md_collector();
     uWS::Hub h;
     zmq::socket_t m_pub;
+    time_t m_last_time;
 };
 
 #endif /* MDSTOCK_COLLECTOR_H */

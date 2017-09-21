@@ -18,23 +18,32 @@
 #include "log.h"
 #include "timer/mailbox.h"
 #include "timer.h"
+#include "zmq_poll_events.h"
+#include "mailbox_event.h"
 
-class zmq_poller_reactor : public thread , public timer {
+class zmq_poller_reactor : public thread_t , public timer, public mailbox_event, public zmq_poll_events {
 public:
     zmq_poller_reactor(zmq::context_t* ctx);
 
     virtual ~zmq_poller_reactor();
 
     virtual void run();
-
-    virtual void timer_event(int id_);
     
-    void stop();
+    virtual void stop();
     
-    mailbox_t<char> m_mailbox;
+    void add_socket(zmq::socket_t* socket, zmq_poll_events* event);
+    
+    mailbox_t<event>* get_mailbox();
+    
 private:
+    
+    void process_term() override;
+
+    mailbox_t<event> m_mailbox;
     zmq::context_t* m_ctx;
     bool m_stop;
+    //std::vector<zmq::socket_t*> m_poll_sockets;
+    std::vector<std::pair<zmq::socket_t*,zmq_poll_events*>> m_poll_sockets;
 };
 
 #endif /* ZMQ_POLLER_REACTOR_H */

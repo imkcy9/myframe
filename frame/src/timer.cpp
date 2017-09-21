@@ -15,6 +15,7 @@
 #include <zmq.h>
 #include <assert.h>
 #include <vector>
+#include "zmq_poll_events.h"
 
 void timer_fun(int id_, void *arg) {
     timer* t = (timer*)arg;
@@ -22,7 +23,10 @@ void timer_fun(int id_, void *arg) {
 }
 
 void timer::on_timer_event(int id_, void* arg) {
-    timer_event(m_timerMap[id_]);
+    auto it = m_timerMap.find(id_);
+    if( it != m_timerMap.end()) {
+        it->second.event->zmq_timer_event(it->second.id_);
+    }
 }
 
 timer::timer() {
@@ -30,20 +34,23 @@ timer::timer() {
 }
 
 timer::~timer() {
-    zmq_timers_destroy(&timer_);
+    if(timer_) {
+        zmq_timers_destroy(&timer_);
+    }
 }
 
-int timer::timers_add(int id_, size_t interval) {
+int timer::timers_add(int id_, size_t interval, zmq_poll_events* event) {
     int id = zmq_timers_add(timer_,interval,timer_fun,this);
-    m_timerMap.insert(std::make_pair(id,id_));
+    timer_info timer_info_ = {id_, timer_fun, event};
+    m_timerMap.insert(std::pair<int,timer_info>(id,timer_info_));
     //vec_fun.push_back(handler);
-    //assert(vec_fun.size() == id);
+    assert(m_timerMap.size() == id);
     return id;
 }
 
-int timer::timers_cancel(int id_) {
-    for (std::map<int,int>::iterator it = m_timerMap.begin(); it != m_timerMap.end(); it++) {
-        if(it->second == id_) {
+int timer::timers_cancel(int id_,zmq_poll_events* event) {
+    for (auto it = m_timerMap.begin(); it != m_timerMap.end(); it++) {
+        if(it->second.id_ == id_ && it->second.event == event) {
             zmq_timers_cancel(timer_,it->first);
         }
     }

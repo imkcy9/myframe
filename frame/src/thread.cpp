@@ -14,15 +14,19 @@
 #include "thread.h"
 #include <zmq.h>
 
-thread::thread()
+thread_t::thread_t()
 : thread_handler(NULL)
 ,is_start(false) {
 }
 
-thread::~thread() {
+thread_t::~thread_t() {
 }
 
-void thread::start() {
+bool thread_t::init() {
+    return true;
+}
+
+void thread_t::start() {
     if(is_running())
         return;
     
@@ -30,25 +34,26 @@ void thread::start() {
     thread_handler = zmq_threadstart(worke_routine, this);
 }
 
-void thread::join() {
-    zmq_threadclose(thread_handler);
+void thread_t::join() {
+    if(thread_handler)
+        zmq_threadclose(thread_handler);
 }
 
-bool thread::init_before_start() {
+bool thread_t::before_start() {
     return true;
 }
 
-void thread::release_before_end() {
+void thread_t::before_end() {
 
 }
 
 
-void thread::worke_routine(void* arg_) {
-    bool ret = ((thread*) arg_)->init_before_start();
+void thread_t::worke_routine(void* arg_) {
+    bool ret = ((thread_t*) arg_)->before_start();
     if (ret) {
-        ((thread*) arg_)->run();
+        ((thread_t*) arg_)->run();
     }
-    ((thread*) arg_)->release_before_end();
-    ((thread*) arg_)->is_start = false;
+    ((thread_t*) arg_)->before_end();
+    ((thread_t*) arg_)->is_start = false;
 }
 

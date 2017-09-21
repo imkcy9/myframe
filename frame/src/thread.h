@@ -14,10 +14,11 @@
 #ifndef THREAD_H
 #define THREAD_H
 
-class thread {
+class thread_t {
 public:
-    thread();
-    virtual ~thread();
+    thread_t();
+    virtual ~thread_t();
+    bool init();
     void start();
     void join();
 
@@ -26,8 +27,8 @@ public:
     }
 private:
     virtual void run() = 0;
-    virtual bool init_before_start();
-    virtual void release_before_end();
+    virtual bool before_start();
+    virtual void before_end();
     static void worke_routine(void* arg_);
     void* thread_handler;
     bool is_start;

@@ -16,7 +16,10 @@
 using namespace std;
 
 mdstock_collector::mdstock_collector(zmq::context_t* ctx)
-:m_pub(*ctx,ZMQ_PUB){
+:m_pub(*ctx,ZMQ_PUB)
+,m_last_time(0){
+    int sndhwm = 5000;
+    m_pub.setsockopt(ZMQ_SNDHWM,&sndhwm,sizeof(sndhwm));
     m_pub.bind("inproc://inner_pub");
 }
 
@@ -32,6 +35,8 @@ void mdstock_collector::run() {
 
 void mdstock_collector::start_md_collector() {
     uWS::Hub& h = this->h;
+    zmq::socket_t& pub = this->m_pub;
+    time_t last_recv_time = this->m_last_time;
     const char *broadcastMessage = "This will be broadcasted!";
     size_t broadcastMessageLength = strlen(broadcastMessage);
 
@@ -41,25 +46,24 @@ void mdstock_collector::start_md_collector() {
     });
     
     int broadcasts = connections;
-    h.onMessage([](uWS::WebSocket<uWS::CLIENT> *ws, char *message, size_t length, uWS::OpCode opCode) {
+    h.onMessage([&pub,&last_recv_time](uWS::WebSocket<uWS::CLIENT> *ws, char *message, size_t length, uWS::OpCode opCode) {
         {
-            //broadcasts--;
-            LOG_INFO("{},{}",message,ws->getFd());
+            zmq::message_t msg(length);
+            memcpy(msg.data(),message, length);
+            pub.send(msg);
+            last_recv_time = time(0);
         }
     });
 
     h.onDisconnection([&h](uWS::WebSocket<uWS::CLIENT> *ws, int code, char *message, size_t length) {
         if (code != 1000) {
-            std::cout << "FAILURE: Invalid close code!" <<code << " " << message << std::endl;
-            
-            
+            LOG_WARN("Invalid close code! {}, {}, ID{}",code,message,ws->getFd());
         }
         
         if(code != 9999) {
-            LOG_INFO("onDisconnection{}",(char*)ws->getUserData());
+            LOG_WARN("onDisconnection{}",(char*)ws->getUserData());
             //ws->close(999,"closed",7);
-            std::string s = (char*)ws->getUserData();
-            h.connect(  s, (void*)s.c_str());
+            h.connect((char*)ws->getUserData(), (char*)ws->getUserData());
         }
 
     });
@@ -72,15 +76,7 @@ void mdstock_collector::start_md_collector() {
 
 
 void mdstock_collector::connect(const char* addr) {
-    //h.getDefaultGroup<uWS::SERVER>().close();
-    //h.getDefaultGroup<uWS::CLIENT>().terminate();
-    //h.connect("ws://hq.sinajs.cn/wskt?list=sh601006", nullptr);
-    //h.connect("ws://hq.sinajs.cn/wskt?list=sh601006", nullptr);
-    char array[] = "ws://hq.sinajs.cn/wskt?list=sh601006";
-    h.connect("ws://hq.sinajs.cn/wskt?list=sh601006",(void*)array,{{"addr",array}});
-    h.connect("ws://hq.sinajs.cn/wskt?list=sh601006", (void*)"ws://hq.sinajs.cn/wskt?list=sh601006",{{"addr","array"}});
-    memset(array,0,sizeof(array));
-
+    h.connect(addr,new std::string(addr));
 }
 
 void mdstock_collector::stop() {

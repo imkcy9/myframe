@@ -16,28 +16,30 @@
 #include <cstddef>
 #include <map>
 
+#include "zmq_poll_events.h"
+
+class zmq_poll_events;
 typedef void (timer_fn)(int timer_id, void *arg);
 class timer {
 public:
     timer();
     virtual ~timer();
-    int timers_add(int id_, size_t interval);
-    int timers_cancel(int id_);
+    int timers_add(int id_, size_t interval, zmq_poll_events* event);
+    int timers_cancel(int id_,zmq_poll_events* event);
     long timers_timeout();
     void timers_execute();
     
     void on_timer_event(int id_, void *arg);
-    virtual void timer_event(int id_) = 0;
+    //virtual void timer_event(int id_) = 0;
 private:
     void* timer_;
     struct timer_info {
         int id_;
         timer_fn* fun_;
+        zmq_poll_events* event;
     };
-    std::map<int,int> m_timerMap;
-    //void timer_fun(int timer_id, void *arg);
-    
-    //std::vector<timer_fn*> vec_fun;
+
+    std::multimap<int,timer_info> m_timerMap;
 };
 
 #endif /* TIMER_H */

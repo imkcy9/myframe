@@ -62,6 +62,10 @@ public:
     DECLARE_CONFIG_GETSTR(config,mysqlconn,username)
     DECLARE_CONFIG_GETSTR(config,mysqlconn,passwd)
     DECLARE_CONFIG_GETSTR(config,mysqlconn,dbname)
+    
+    DECLARE_CONFIG_GETSTR(config,mdconfig,connect_addr);
+    DECLARE_CONFIG_GETSTR(config,mdconfig,bind_addr);
+    DECLARE_CONFIG_GETSTR(config,mdconfig,clear_signal_time);
 private:
 
     config() {

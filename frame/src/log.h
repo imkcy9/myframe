@@ -18,6 +18,7 @@
 #ifdef SPDLOG_TRACE_ON
 #define LOG_TRACE(...) spdlog::get("Log")->trace("[" __FILE__ " line #" SPDLOG_STR_HELPER(__LINE__) "] " __VA_ARGS__)
 #define LOG_DEBUG(...) spdlog::get("Log")->debug("[" __FILE__ " line #" SPDLOG_STR_HELPER(__LINE__) "] " __VA_ARGS__)
+#define LOG_DEBUG_IF(BOOLFLAG,...) spdlog::get("Log")->debug_if(BOOLFLAG,"[" __FILE__ " line #" SPDLOG_STR_HELPER(__LINE__) "] " __VA_ARGS__)
 #define LOG_INFO(...) spdlog::get("Log")->info("[" __FILE__ " line #" SPDLOG_STR_HELPER(__LINE__) "] " __VA_ARGS__)
 #define LOG_WARN(...) spdlog::get("Log")->warn("[" __FILE__ " line #" SPDLOG_STR_HELPER(__LINE__) "] " __VA_ARGS__)
 #define LOG_ERROR(...) spdlog::get("Log")->error("[" __FILE__ " line #" SPDLOG_STR_HELPER(__LINE__) "] " __VA_ARGS__)

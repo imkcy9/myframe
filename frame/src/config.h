@@ -57,8 +57,6 @@ public:
     DECLARE_CONFIG_GETINT(config,basic,logPriority)
 
     DECLARE_CONFIG_GETSTR(config,mysqlconn,dbip)
-    DECLARE_CONFIG_GETINT(config,mysqlconn,dbport)
-    DECLARE_CONFIG_GETINT(config,mysqlconn,readtimeout)
     DECLARE_CONFIG_GETSTR(config,mysqlconn,username)
     DECLARE_CONFIG_GETSTR(config,mysqlconn,passwd)
     DECLARE_CONFIG_GETSTR(config,mysqlconn,dbname)
@@ -66,6 +64,9 @@ public:
     DECLARE_CONFIG_GETSTR(config,mdconfig,connect_addr);
     DECLARE_CONFIG_GETSTR(config,mdconfig,bind_addr);
     DECLARE_CONFIG_GETSTR(config,mdconfig,clear_signal_time);
+    DECLARE_CONFIG_GETSTR(config,mdconfig,storage_path);
+    DECLARE_CONFIG_GETBOOL(config,mdconfig,is_storage);
+    DECLARE_CONFIG_GETBOOL(config,mdconfig,update_innercode_from_sina_before_subscribe);
 private:
 
     config() {

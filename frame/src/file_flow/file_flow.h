@@ -15,6 +15,7 @@
 #define FILE_FLOW_H
 #include "platform.h"
 #include "flow.h"
+#include "zmq.hpp"
 
 class file_flow : public flow {
 public:
@@ -32,6 +33,8 @@ public:
     virtual bool truncate(int count_);
 
     virtual int get(int id_, void* object_, int length_);
+    
+    virtual int get(int id_, zmq::message_t* msg_);
 
     virtual const int* get_count_ptr();
 

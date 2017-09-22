@@ -31,7 +31,6 @@ public:
     inline void lock()
     {
         int rc = pthread_mutex_lock(&mutex);
-        printf("%s\n",strerror(rc)); 
         assert(0 == rc);
     }
     

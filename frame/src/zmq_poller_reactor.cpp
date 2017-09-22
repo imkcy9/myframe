@@ -52,7 +52,7 @@ void zmq_poller_reactor::run() {
             int rc = m_mailbox.recv(&event_, 0);
             while (rc == 0 || errno == EINTR) {
                 if (rc == 0) {
-                    LOG_INFO("recv {} ", event_.type);
+                    LOG_DEBUG("mailbox event recv {} ", event_.type);
                     process_event(event_);
                 }
                 rc = m_mailbox.recv(&event_, 0);

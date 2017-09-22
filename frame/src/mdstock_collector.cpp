@@ -57,7 +57,7 @@ void mdstock_collector::start_md_collector() {
 
     h.onDisconnection([&h](uWS::WebSocket<uWS::CLIENT> *ws, int code, char *message, size_t length) {
         if (code != 1000) {
-            LOG_WARN("Invalid close code! {}, {}, ID{}",code,message,ws->getFd());
+            LOG_DEBUG("Invalid close code! {}, {}, ID{}",code,message,ws->getFd());
         }
         
         if(code != 9999) {
@@ -68,10 +68,11 @@ void mdstock_collector::start_md_collector() {
 
     });
 
+    LOG_INFO("websocket init sucess");
     h.run();
     
 
-    LOG_INFO("websocket init sucess");
+    
 }
 
 

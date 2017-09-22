@@ -135,6 +135,28 @@ int file_flow::get(int id_, void* object_, int length_) {
     return flowid.dwSize;
 }
 
+int file_flow::get(int id_, zmq::message_t* msg_) {
+    ENTER_CRITICAL(critical_var);
+    fpos_t offset = get_offset(id_);
+    tflow_id flowid;
+    fsetpos(fp_content_file,&offset);
+    if(fread(&flowid,sizeof(flowid),1,fp_content_file) != 1)
+        assert(false&&("Can not read content file for CFlow"));
+    flowid.change_endian();
+    
+    msg_->rebuild(flowid.dwSize);
+    
+    if(fread(msg_->data(),1,flowid.dwSize, fp_content_file) != (size_t)flowid.dwSize)
+        assert(false&&("Can not read content file for CFlow"));
+    
+    last_read_id = id_;
+    FPOS_SET(last_read_offset,FPOS_GET(offset)+ flowid.dwSize + sizeof(flowid));
+    LEAVE_CRITICAL(critical_var);
+    
+    return flowid.dwSize;
+}
+
+
 void file_flow::open_file(const char* flow_name_, const char* path_, bool reuse_) {
     ASSERT(path_);
     close_file();

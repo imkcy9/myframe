@@ -44,7 +44,7 @@ int timer::timers_add(int id_, size_t interval, zmq_poll_events* event) {
     timer_info timer_info_ = {id_, timer_fun, event};
     m_timerMap.insert(std::pair<int,timer_info>(id,timer_info_));
     //vec_fun.push_back(handler);
-    assert(m_timerMap.size() == id);
+    //assert(m_timerMap.size() == id);
     return id;
 }
 
@@ -52,6 +52,7 @@ int timer::timers_cancel(int id_,zmq_poll_events* event) {
     for (auto it = m_timerMap.begin(); it != m_timerMap.end(); it++) {
         if(it->second.id_ == id_ && it->second.event == event) {
             zmq_timers_cancel(timer_,it->first);
+            m_timerMap.erase(it);
         }
     }
 }

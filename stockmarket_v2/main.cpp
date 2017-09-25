@@ -35,4 +35,3 @@ void prog_exit(int /*signo*/) {
     LOG_WARN("exit");
     app.stop();
 }
-

@@ -87,6 +87,7 @@ void application::before_end() {
     m_update_thread->join();
     m_flow_worker->join();
     LOG_INFO("application end");
+    LOGGER::dropall();
 }
 /* 获取数据库信息 */  
 static void GetDBMetaData(Connection *dbcon)   
@@ -339,4 +340,3 @@ void application::stop() {
         m_flow_worker->stop();
     }
 }
-

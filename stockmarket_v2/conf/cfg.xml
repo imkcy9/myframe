@@ -29,7 +29,7 @@
     -->
     <mysqlconn dbip="tcp://192.168.19.192:3306" 
                username="tradepro" 
-               passwd="trade123456ing" 
+               passwd="trading" 
                dbname="stockquote"
     />
     

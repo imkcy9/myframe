@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+message depthmarketdata {
+    int64   Ei = 1;
+    string  SecurityCode = 2;
+    string  SecurityName = 3;
+    double  OpenPrice = 4;
+    double  PreClosePrice = 5;
+    double  LastPrice = 6;
+    double  HighPrice = 7;
+    double  LowPrice = 8;
+    double  BidPrice = 9;
+    double  AskPrice = 10;
+    int64   Volume = 11;
+    double  Turnover = 12;
+    repeated    double  BP = 13;
+    repeated    int64   BV = 14;
+    repeated    double  SP = 15;
+    repeated    int64   SV = 16;
+    string  Date = 17;
+    string  Time = 18;
+    string  Status = 19;
+    int64   UpdTime = 20;
+    double  TurnoverRate = 21;
+    double  AvPri = 22;
+    double  SA = 23;
+    double  LimitUp = 24;
+    double  LimitDown = 25;
+    double  CirStock = 26;
+    double  TotStock = 27;
+    double  CirVal = 28;
+    double  TotVal = 29;
+    double  NAV = 30;
+    double  Ratio = 31;
+    double  Committee = 32;
+    double  PED = 33;
+    double  PES = 34;
+    double  WP = 35;
+    double  NP = 36;
+    double  Z = 37;
+    double  D = 38;
+    double  P = 39;
+    int64    TradVol = 40;
+    int64   field1 = 41;
+    int64   field2 = 42;
+    double  field3 = 43;
+    double  field4 = 44;
+    string  field5 = 55;
+    string  field6 = 56;
+}
+
+
+message clearsignal {
+    string tradingday = 1;
+    int64  update_time = 2;
+}
+
+message heartbeat {
+    int64 update_time = 1;
+}
+
+message protomessage {
+    oneof which_message {
+        depthmarketdata market_data = 1;
+        clearsignal clear_signal = 2;
+        heartbeat heart_beat = 3;
+    }
+}

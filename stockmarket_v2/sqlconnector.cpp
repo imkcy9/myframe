@@ -37,13 +37,15 @@ void sqlconnector::status_check() {
         driver = get_driver_instance();
     }
     if(!con && driver) {
-        
-        con = driver->connect(hostName_,userName_,password_);
+        LOG_INFO("mysql hostname:{}, username:{}, password:{}",hostName_.c_str(),userName_.c_str(),password_.c_str());
+        //con = driver->connect(hostName_,userName_,password_);
+        con = driver->connect("tcp://192.168.19.192:3306","tradepro","trade123456ing");
         bool myTrue = true;
         con->setClientOption("OPT_RECONNECT",&myTrue);
         con->setSchema(dbName_);
         
         con->setAutoCommit(true);
+        
     }
     if(con && con->isClosed()) {
         con->reconnect();

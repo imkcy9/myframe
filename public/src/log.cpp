@@ -19,5 +19,8 @@ void LOGGER::init(bool is_daemon, int level, const char* log_path) {
     }
     spdlog::get("Log")->flush_on(spdlog::level::warn);
     spdlog::set_level((spdlog::level::level_enum)level);
+}
 
+void LOGGER::dropall() {
+    spdlog::drop_all();
 }

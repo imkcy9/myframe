@@ -33,6 +33,7 @@
 #endif
 namespace LOGGER {
     void init(bool is_daemon,int level,const char* log_path);
+    void dropall();
 }
 
 #endif /* LOG_H */

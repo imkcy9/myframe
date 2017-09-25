@@ -147,6 +147,7 @@ void md_engine::zmq_timer_event(int id_) {
         m_pub.attach_inner_code(m_innerCode);
         if (subscribe(m_innerCode)) {
             LOG_INFO("Subscribe success, start recv market datas...");
+            
         } else {
             LOG_ERROR("A subscription failure occurred, it will retry after 5 seconds.");
             timers_add(timer_subscribe, 5000, this);
@@ -194,6 +195,8 @@ void md_engine::process_update_innercode(void* metadata) {
  
             m_bFirstSubscribe = false;
         }
+    } else {
+        LOG_ERROR("metadata is null...");
     }
 
 }

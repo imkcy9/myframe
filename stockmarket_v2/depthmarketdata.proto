@@ -41,6 +41,12 @@ message depthmarketdata {
     double  D = 38;
     double  P = 39;
     int64    TradVol = 40;
+    int64   field1 = 41;
+    int64   field2 = 42;
+    double  field3 = 43;
+    double  field4 = 44;
+    string  field5 = 55;
+    string  field6 = 56;
 }
 
 

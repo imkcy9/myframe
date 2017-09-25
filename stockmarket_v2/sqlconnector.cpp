@@ -37,10 +37,12 @@ void sqlconnector::status_check() {
         driver = get_driver_instance();
     }
     if(!con && driver) {
+        
         con = driver->connect(hostName_,userName_,password_);
-        con->setSchema(dbName_);
         bool myTrue = true;
         con->setClientOption("OPT_RECONNECT",&myTrue);
+        con->setSchema(dbName_);
+        
         con->setAutoCommit(true);
     }
     if(con && con->isClosed()) {

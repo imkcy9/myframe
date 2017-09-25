@@ -173,7 +173,7 @@ std::unordered_map<std::string, tick_info>* stcode_updator::get_securitycode_map
 
         
 
-        sql::ResultSet* res = m_stcode.query("select * from t_stcode_copy WHERE EnableSubMarket !=0 and Status != 0 and (SecurityType = 'I' or SecurityType = 'A')");
+        sql::ResultSet* res = m_stcode.query("select * from t_stcode WHERE EnableSubMarket !=0 and Status != 0 and (SecurityType = 'I' or SecurityType = 'A')");
         while (res && res->next()) {
             tick_info tick_info_;
             tick_info_.ei = res->getInt64("ID");
@@ -222,16 +222,16 @@ stcode_updator::rzrq stcode_updator::getRzrq(const char* securityCode) {
     while (m_curlhelp.get_next_line(result)) {
         rapidjson::Document document;
         if (document.Parse(result.c_str()).HasParseError()) {
-            LOG_ERROR("【《融资融券》】解析股票(代码:%s)的融资融券信息(url:%s)失败，不是JSON格式", securityCode, url.c_str());
+            LOG_ERROR("【《融资融券》】解析股票(代码:{})的融资融券信息(url:{})失败，不是JSON格式", securityCode, url.c_str());
             continue;
         }
         if (!document.IsObject() || !document.HasMember("result") || !document["result"].IsObject()) {
-            LOG_ERROR("【《融资融券》】解析股票(代码:%s)的融资融券信息(url:%s)失败，不能正确解析到result字段", securityCode, url.c_str());
+            LOG_ERROR("【《融资融券》】解析股票(代码:{})的融资融券信息(url:{})失败，不能正确解析到result字段", securityCode, url.c_str());
             continue;
         }
         const rapidjson::Value& resultValue = document["result"];
         if (!resultValue.HasMember("data") || !resultValue["data"].IsObject()) {
-            LOG_ERROR("【《融资融券》】解析股票(代码:%s)的公告融资融券(url:%s)失败，不能正确解析到data字段", securityCode, url.c_str());
+            LOG_ERROR("【《融资融券》】解析股票(代码:{})的公告融资融券(url:{})失败，不能正确解析到data字段", securityCode, url.c_str());
             continue;
         }
         const rapidjson::Value& dataValue = resultValue["data"];

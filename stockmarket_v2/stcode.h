@@ -90,7 +90,7 @@ public:
     };
 
     const char* get_tablename() override {
-        return "t_stcode_copy";
+        return "t_stcode";
     }
 
     sql::PreparedStatement* update(vector<std::string>& vec, sql::ResultSet* res, bool update_insert_time = true) {
@@ -104,10 +104,10 @@ public:
         get_pre_update_stmt()->setString(3, res->getString("SecurityName"));
         get_pre_update_stmt()->setString(4, vec[E_SECURITY_TYPE]);
         get_pre_update_stmt()->setString(5, vec[E_SHORT_NAME]);
-        get_pre_update_stmt()->setString(6, vec[E_EPS]);
-        get_pre_update_stmt()->setString(7, vec[E_EPS2]);
-        get_pre_update_stmt()->setString(8, vec[E_EPS3]);
-        get_pre_update_stmt()->setString(9, vec[E_NAV]);
+        get_pre_update_stmt()->setDouble(6, atof(vec[E_EPS].c_str()));
+        get_pre_update_stmt()->setDouble(7, atof(vec[E_EPS2].c_str()));
+        get_pre_update_stmt()->setDouble(8, atof(vec[E_EPS3].c_str()));
+        get_pre_update_stmt()->setDouble(9, atof(vec[E_NAV].c_str()));
         get_pre_update_stmt()->setString(10, vec[E_LAST_FIVE_TRADE]);
         get_pre_update_stmt()->setString(11, vec[E_TOTAL_SHARE]);
         get_pre_update_stmt()->setString(12, vec[E_CIRCULATED_SHARE]);
@@ -149,10 +149,10 @@ public:
         get_pre_insert_stmt()->setNull(3, 0);
         get_pre_insert_stmt()->setString(4, vec[E_SECURITY_TYPE]);
         get_pre_insert_stmt()->setString(5, vec[E_SHORT_NAME]);
-        get_pre_insert_stmt()->setString(6, vec[E_EPS]);
-        get_pre_insert_stmt()->setString(7, vec[E_EPS2]);
-        get_pre_insert_stmt()->setString(8, vec[E_EPS3]);
-        get_pre_insert_stmt()->setString(9, vec[E_NAV]);
+        get_pre_insert_stmt()->setDouble(6, atof(vec[E_EPS].c_str()));
+        get_pre_insert_stmt()->setDouble(7, atof(vec[E_EPS2].c_str()));
+        get_pre_insert_stmt()->setDouble(8, atof(vec[E_EPS3].c_str()));
+        get_pre_insert_stmt()->setDouble(9, atof(vec[E_NAV].c_str()));
         get_pre_insert_stmt()->setString(10, vec[E_LAST_FIVE_TRADE]);
         get_pre_insert_stmt()->setString(11, vec[E_TOTAL_SHARE]);
         get_pre_insert_stmt()->setString(12, vec[E_CIRCULATED_SHARE]);
@@ -178,7 +178,7 @@ public:
     }
 
     void get_result() {
-        sql::ResultSet* res = query("select * from t_stcode_copy where EnableSubMarket != 0 and Status != 0");
+        sql::ResultSet* res = query("select * from t_stcode where EnableSubMarket != 0 and Status != 0");
 
         while (res && res->next()) {
             std::string td = res->getString("securityname");

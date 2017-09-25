@@ -53,10 +53,13 @@ public:
     
     bool keep_connected() {
         bool connected = true;
-        if(con && con->isClosed()) {
-            connected = con->reconnect();
-            LOG_DEBUG("mysql 重新连接");
+        if(con) {
+            if (con->isClosed() || !con->isValid()) {
+                connected = con->reconnect();
+                LOG_DEBUG("mysql 重新连接");
+            }
         }
+
         return connected;
     }
 protected:

@@ -16,9 +16,9 @@
 #include "zmq_poller_reactor.h"
 
 zmq_poller_reactor::zmq_poller_reactor(zmq::context_t* ctx)
-: m_ctx(ctx)
-, m_stop(false) 
-,mailbox_event(&m_mailbox){
+: mailbox_event(&m_mailbox)
+,m_ctx(ctx)
+, m_stop(false) {
 }
 
 zmq_poller_reactor::~zmq_poller_reactor() {

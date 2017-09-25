@@ -37,8 +37,9 @@ private:
     };
     void before_end() override;
 
-    mailbox_event* m_mailevent_handler;
+    
     stcode_updator* m_stcoe_updator;
+    mailbox_event* m_mailevent_handler;
 };
 
 #endif /* UPDATE_THREAD_H */

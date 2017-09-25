@@ -39,9 +39,10 @@ private:
     
     void process_term() override;
 
-    mailbox_t<event> m_mailbox;
+    
     zmq::context_t* m_ctx;
     bool m_stop;
+    mailbox_t<event> m_mailbox;
     //std::vector<zmq::socket_t*> m_poll_sockets;
     std::vector<std::pair<zmq::socket_t*,zmq_poll_events*>> m_poll_sockets;
 };

@@ -24,6 +24,7 @@ mdstock_collector::mdstock_collector(zmq::context_t* ctx)
 }
 
 mdstock_collector::~mdstock_collector() {
+    m_pub.close();
 }
 
 void mdstock_collector::run() {

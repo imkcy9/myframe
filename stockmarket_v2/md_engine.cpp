@@ -34,6 +34,8 @@ md_engine::~md_engine() {
     m_md_cllector.stop();
     if (m_stcoe_updator)
         delete m_stcoe_updator;
+    m_pub.close();
+    m_inner_sub.close();
 }
 
 bool md_engine::init() {

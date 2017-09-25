@@ -47,6 +47,7 @@ application::~application() {
         delete m_update_thread;
     if(m_flow_worker)
         delete m_flow_worker;
+    m_ctx.close();
 }
 
 bool application::before_start() {

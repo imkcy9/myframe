@@ -51,17 +51,7 @@ public:
         return stmt->executeQuery(sql);
     }
     
-    bool keep_connected() {
-        bool connected = true;
-        if(con) {
-            if (con->isClosed() || !con->isValid()) {
-                connected = con->reconnect();
-                LOG_DEBUG("mysql 重新连接");
-            }
-        }
-
-        return connected;
-    }
+    bool keep_connected();
 protected:
     void add_column_member(const uint32_t index, const sql::SQLString& colMember);
 private:

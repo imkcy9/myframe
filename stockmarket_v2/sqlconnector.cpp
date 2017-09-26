@@ -31,6 +31,22 @@ void sqlconnector::add_column_member(const uint32_t index, const sql::SQLString&
     column_members_.push_back(colMember);
 }
 
+bool sqlconnector::keep_connected() {
+    bool connected = true;
+    if (con) {
+        if (con->isClosed() || !con->isValid()) {
+            connected = con->reconnect();
+            bool myTrue = true;
+            con->setClientOption("OPT_RECONNECT",&myTrue);
+            con->setSchema(dbName_);
+            con->setAutoCommit(true);
+            LOG_DEBUG("mysql 重新连接");
+        }
+    }
+
+    return connected;
+}
+
 
 void sqlconnector::status_check() {
     if(!driver) {

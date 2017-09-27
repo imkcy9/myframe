@@ -36,6 +36,10 @@ md_engine::~md_engine() {
         delete m_stcoe_updator;
     m_pub.close();
     m_inner_sub.close();
+    
+    while(m_zmq_monitor.check_event()) {
+        continue;
+    }
 }
 
 bool md_engine::init() {
@@ -50,9 +54,10 @@ bool md_engine::init() {
         m_inner_sub.connect("inproc://inner_pub");
         //m_pub.bind("inproc://inner_pub_protobuf");
         //m_pub.bind("ipc:///home/quote/ipc/test");
+        m_zmq_monitor.init(m_pub,"inproc://monitor");
         m_pub.bind(config::Instance()->get_mdconfig_bind_addr());
-
         add_socket(&m_inner_sub, this);
+        
 
         //订阅交由update_thread来决定
         //timers_add(timer_subscribe, 2000,this);
@@ -168,6 +173,7 @@ void md_engine::zmq_timer_event(int id_) {
         hb.set_update_time(time(0));
         m_pub.send_message("", 0, HEARTBEAT_CMD, protomsg);
         LOG_DEBUG("Pubber sends heartbeat...");
+        m_zmq_monitor.check_event();
     }
     
     if(id_ == timer_send_clear_signal) {

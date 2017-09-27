@@ -19,6 +19,7 @@
 #include "stcode_updator.h"
 #include "md_pubber.h"
 #include "zmq_poll_events.h"
+#include "zmq_monitor.h"
 
 
 
@@ -55,7 +56,7 @@ private:
     md_pubber m_pub;
     
     bool m_bFirstSubscribe;
-    
+    zmq_monitor m_zmq_monitor;
 };
 
 #endif /* MD_ENGINE_H */

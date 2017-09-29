@@ -27,14 +27,21 @@ zmq_monitor::~zmq_monitor() {
 }
 
 void zmq_monitor::register_zookeeper(const char* path, const char* value) {
-    bool ret = m_zkcli.create_node(path,
+    //监听此结点的状态
+    bool ret = m_zkcli.exists(path);
+    if(ret) {
+        LOG_DEBUG( "{}  node exist... {}", path, m_zkcli.get(path));
+    } else {
+        LOG_DEBUG( "{}  node not exist... ", path);
+    }
+    ret = m_zkcli.create_node(path,
             value,
             strlen(value),
             false);
 
-    //监听此结点的状态
-    ret = m_zkcli.exists(path);
     LOG_DEBUG_IF(ret, "Create zookeeper node success... {}:{}", path, value);
+    
+
 }
 
 void zmq_monitor::on_event_listening(const zmq_event_t& event_, const char* addr_) {
@@ -49,7 +56,7 @@ void zmq_monitor::on_event_accepted(const zmq_event_t& event_, const char* addr_
 }
 
 void zmq_monitor::on_zookeeper_create(const char* path) {
-    LOG_DEBUG("on_zookeeper_create {}",path);
+    LOG_DEBUG("on_zookeeper_create {}  {}",path,m_zkcli.get(path));
 }
 
 void zmq_monitor::on_zookeeper_delete(const char* path) {

@@ -127,6 +127,23 @@ bool zookeeper_cli::init(const char* hosts, int timeout, zk_event* event, bool r
     return true;
 }
 
+bool zookeeper_cli::acreate_node(std::string path, std::string value, bool infinity) {
+    return acreate_node(path.c_str(), value.c_str(), value.size(), infinity);
+}
+
+bool zookeeper_cli::acreate_node(const char* path, const char* value, size_t valuelen, bool infinity) {
+    int flags = infinity ? 0 : ZOO_EPHEMERAL;
+    int ret = -1;
+    ret = zoo_acreate(zkhandle, path, value, valuelen,
+            &ZOO_OPEN_ACL_UNSAFE, flags /* ZOO_SEQUENCE */,
+            zktest_string_completion, "acreate");
+    if (ret) {
+        fprintf(stderr, "Error %d for %s\n", ret, "zoo_acreate");
+        return false;
+    }
+    return true;
+}
+
 bool zookeeper_cli::create_node(std::string path, std::string value, bool infinity) {
     return create_node(path.c_str(), value.c_str(), value.size(), infinity);
 }
@@ -134,11 +151,27 @@ bool zookeeper_cli::create_node(std::string path, std::string value, bool infini
 bool zookeeper_cli::create_node(const char* path, const char* value, size_t valuelen, bool infinity) {
     int flags = infinity ? 0 : ZOO_EPHEMERAL;
     int ret = -1;
-    ret = zoo_acreate(zkhandle, path, value, valuelen,
+    char buffer[1024];
+    ret = zoo_create(zkhandle, path, value, valuelen,
             &ZOO_OPEN_ACL_UNSAFE, flags /* ZOO_SEQUENCE */,
-            zktest_string_completion, "acreate");
+            buffer, 1024);
     if (ret) {
-        fprintf(stderr, "Error %d for %s\n", ret, "acreate");
+        fprintf(stderr, "Error %d for %s\n", ret, "zoo_create");
+        return false;
+    }
+    return true;
+}
+
+
+
+bool zookeeper_cli::adelete_node(std::string path) {
+    return adelete_node(path.c_str());
+}
+
+bool zookeeper_cli::adelete_node(const char* path) {
+    int ret = zoo_adelete(zkhandle, path, 0, zktest_void_completion, "adelete");
+    if (ret) {
+        fprintf(stderr, "Error %d for %s\n", ret, "adelete");
         return false;
     }
     return true;
@@ -149,16 +182,17 @@ bool zookeeper_cli::delete_node(std::string path) {
 }
 
 bool zookeeper_cli::delete_node(const char* path) {
-    int ret = zoo_adelete(zkhandle, path, 0, zktest_void_completion, "adelete");
+    int ret = zoo_delete(zkhandle, path, 0);
     if (ret) {
-        fprintf(stderr, "Error %d for %s\n", ret, "adelete");
+        fprintf(stderr, "Error %d for %s\n", ret, "zoo_delete");
         return false;
     }
     return true;
 }
 
-bool zookeeper_cli::exists(const char* path) {
-    int ret = zoo_aexists(zkhandle, path, 1, zktest_stat_completion, "aexists");
+
+bool zookeeper_cli::aexists(const char* path, bool watcher /* = true */) {
+    int ret = zoo_aexists(zkhandle, path, watcher, zktest_stat_completion, "aexists");
     if (ret) {
         fprintf(stderr, "Error %d for %s\n", ret, "aexists");
         return false;
@@ -166,11 +200,33 @@ bool zookeeper_cli::exists(const char* path) {
     return true;
 }
 
-bool zookeeper_cli::get(const char* path) {
-    int ret = zoo_aget(zkhandle, path, 1, zktest_data_completion, zkhandle);
+bool zookeeper_cli::exists(const char* path, bool watcher) {
+    Stat sta;
+    int ret = zoo_exists(zkhandle, path, watcher, &sta);
     if (ret) {
-        fprintf(stderr, "Error %d for %s\n", ret, "aget");
+        fprintf(stderr, "Error %d for %s\n", ret, "zoo_exists");
         return false;
     }
     return true;
+}
+
+bool zookeeper_cli::aget(const char* path, bool watcher) {
+    int ret = zoo_aget(zkhandle, path, 1, zktest_data_completion, zkhandle);
+    if (ret) {
+        fprintf(stderr, "Error %d for %s\n", ret, "zoo_aget");
+        return false;
+    }
+    return true;
+}
+
+std::string zookeeper_cli::get(const char* path, bool watcher) {
+    Stat sta;
+    char buffer[1024];
+    int size = sizeof(buffer);
+    int ret = zoo_get(zkhandle, path, watcher, buffer, &size, &sta);
+    if (ret) {
+        fprintf(stderr, "Error %d for %s\n", ret, "zoo_get");
+        return "";
+    }
+    return std::string(buffer,size);
 }

@@ -21,6 +21,7 @@ public:
     zmq_monitor();
     virtual ~zmq_monitor();
     
+    void register_zookeeper(const char* path, const char* value);
 
     virtual void on_event_listening(const zmq_event_t& event_, const char* addr_);
 

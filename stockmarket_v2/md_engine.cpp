@@ -36,10 +36,7 @@ md_engine::~md_engine() {
         delete m_stcoe_updator;
     m_pub.close();
     m_inner_sub.close();
-    
-    while(m_zmq_monitor.check_event()) {
-        continue;
-    }
+
 }
 
 bool md_engine::init() {

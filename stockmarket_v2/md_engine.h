@@ -32,6 +32,9 @@ public:
     
     bool subscribe(std::unordered_map<std::string, tick_info>* innercode);
     
+    void stop() override;
+
+    
 private:
     enum timer_id {
         timer_subscribe = 0,

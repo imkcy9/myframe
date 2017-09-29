@@ -31,7 +31,7 @@ md_engine::md_engine(zmq::context_t* ctx)
 }
 
 md_engine::~md_engine() {
-    m_md_cllector.stop();
+    //m_md_cllector.stop();
     if (m_stcoe_updator)
         delete m_stcoe_updator;
     m_pub.close();
@@ -135,6 +135,12 @@ bool md_engine::subscribe(std::unordered_map<std::string, tick_info>* innercode)
     m_md_cllector.start();
     return true;
 }
+
+void md_engine::stop() {
+    m_md_cllector.stop();
+    zmq_poller_reactor::stop();
+}
+
 
 void md_engine::zmq_in_event(zmq::socket_t* socket) {
     zmq::message_t msg;

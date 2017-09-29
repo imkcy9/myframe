@@ -35,7 +35,7 @@ application::application()
 ,m_update_thread(0)
 ,m_flow_worker(0)
 ,isdaemon(false)
-,m_ctx(4){
+,m_ctx(0){
 
 }
 
@@ -47,18 +47,25 @@ application::~application() {
         delete m_update_thread;
     if(m_flow_worker)
         delete m_flow_worker;
-    m_ctx.close();
+    if(m_ctx) {
+        m_ctx->close();
+        delete m_ctx;
+    }
 }
 
 bool application::before_start() {
+    if(!m_ctx) {
+        m_ctx = new zmq::context_t(4);
+    }
+    
     if(!m_pEngine) {
-        m_pEngine = new md_engine(&m_ctx);
+        m_pEngine = new md_engine(m_ctx);
     }
     if(!m_update_thread) {
-        m_update_thread = new update_thread(&m_ctx,m_pEngine);
+        m_update_thread = new update_thread(m_ctx,m_pEngine);
     }
     if(!m_flow_worker) {
-        m_flow_worker = new flow_worker(&m_ctx);
+        m_flow_worker = new flow_worker(m_ctx);
     }
     
     if(!m_pEngine->init()) {

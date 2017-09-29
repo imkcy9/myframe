@@ -7,17 +7,23 @@
 
             logPriority : 日志等级(0~6)，数值越低，日志越详细 TRACE:0  DEBUG:1  INFO:2 WARNING:3  ERROR:4  CRITICAL:5 OFF:6
     -->
-    <basic logfile = "./log/stockmarket.txt" 
-           logPriority="1"
+    <basic 
+        logfile = "../log/stockmarket.txt" 
+        logPriority="1"
     />
 
     
-    <mdconfig bind_addr="tcp://0.0.0.0:58004" 
-              connect_addr="ws://hq.sinajs.cn/wskt?list=" 
-              is_storage="true"
-              storage_path="./flow/"  
-              clear_signal_time="09:05:00"
-              update_innercode_from_sina_before_subscribe="false" 
+    <mdconfig 
+        bind_addr="tcp://0.0.0.0:58005"  
+        connect_addr="ws://hq.sinajs.cn/wskt?list=" 
+        is_storage="true"
+        storage_path="../flow/"  
+        clear_signal_time="09:05:00"
+        update_innercode_from_sina_before_subscribe="false" 
+    />
+    
+    <zookeeper
+        zookeeper_serverip="139.196.94.59:1181"
     />
     <!-- 
             数据库配置
@@ -27,10 +33,11 @@
             username: 用户名
             password: 密码
     -->
-    <mysqlconn dbip="tcp://192.168.19.192:3306" 
-               username="tradepro" 
-               passwd="trading" 
-               dbname="stockquote"
+    <mysqlconn 
+        dbip="tcp://192.168.19.192:3306" 
+        username="tradepro" 
+        passwd="trading" 
+        dbname="stockquote"
     />
     
 </config>

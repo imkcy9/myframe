@@ -16,7 +16,7 @@
 #include <zmq.hpp>
 #include "zookeeper_cli/zookeeper_cli.h"
 
-class zmq_monitor : public zmq::monitor_t {
+class zmq_monitor : public zmq::monitor_t , public zk_event {
 public:
     zmq_monitor();
     virtual ~zmq_monitor();
@@ -25,9 +25,17 @@ public:
     virtual void on_event_listening(const zmq_event_t& event_, const char* addr_);
 
     virtual void on_event_accepted(const zmq_event_t& event_, const char* addr_);
+    
+
+    virtual void on_zookeeper_create(const char* path);
+
+    virtual void on_zookeeper_delete(const char* path);
+
+    virtual void on_zookeeper_changed(const char* path);
+
 
 private:
-
+    zookeeper_cli m_zkcli;
 };
 
 #endif /* ZMQ_MONITOR_H */

@@ -57,7 +57,7 @@ bool md_engine::init() {
         m_zmq_monitor.init(m_pub,"inproc://monitor");
         m_pub.bind(config::Instance()->get_mdconfig_bind_addr());
         add_socket(&m_inner_sub, this);
-        
+        m_zmq_monitor.check_event();
 
         //订阅交由update_thread来决定
         //timers_add(timer_subscribe, 2000,this);

@@ -33,6 +33,14 @@ void mailbox_event::send_update_innercode(void* metadata) {
     m_mailbox->send(event_);
 }
 
+void mailbox_event::send_tradingday_changed(const char* tradingday) {
+    event event_;
+    event_.type = event::tradingday_changed;
+    event_.metadata = (void*)tradingday;
+    m_mailbox->send(event_);
+}
+
+
 void mailbox_event::process_event(event& event_) {
     switch(event_.type) {
         case event::term:
@@ -40,6 +48,10 @@ void mailbox_event::process_event(event& event_) {
             break;
         case event::update_innercode:
             process_update_innercode(event_.metadata);
+            break;
+        case event::tradingday_changed:
+            process_tradingday_changed((const char*)event_.metadata);
+            break;
         default:
             break;
     }

@@ -18,7 +18,8 @@
 struct event {
     enum type_{
         term = 0,
-        update_innercode
+        update_innercode,
+        tradingday_changed
     } type;
     void* metadata;
 };
@@ -30,12 +31,14 @@ public:
     
     void send_term();
     void send_update_innercode(void* metadata);
+    void send_tradingday_changed(const char* tradingday);
 
     void process_event(event& event_);
 private:
     
     virtual void process_term(){};
     virtual void process_update_innercode(void* metadata){};
+    virtual void process_tradingday_changed(const char* tradingday){};
     mailbox_t<event>* m_mailbox;
 };
 

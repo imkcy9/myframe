@@ -79,7 +79,17 @@ void md_engine::send_clear_signal() {
     msg.mutable_clear_signal()->set_tradingday(timeutil::get_strtime(time(0), "%Y%m%d"));
     msg.mutable_clear_signal()->set_update_time(time(0));
     m_pub.send_message("", 0, TRADINGDAY_CHANGED, msg);
+    LOG_INFO("发送清盘信号成功，交易日 {}", msg.mutable_clear_signal()->tradingday());
 }
+
+void md_engine::send_clear_signal(const char* tradingday) {
+    protomessage msg;
+    msg.mutable_clear_signal()->set_tradingday(tradingday);
+    msg.mutable_clear_signal()->set_update_time(time(0));
+    m_pub.send_message("", 0, TRADINGDAY_CHANGED, msg);
+    LOG_INFO("发送清盘信号成功，交易日 {}", msg.mutable_clear_signal()->tradingday());
+}
+
 
 bool md_engine::subscribe(std::unordered_map<std::string, tick_info>* innercode) {
     if (!innercode || innercode->empty())
@@ -157,6 +167,11 @@ void md_engine::zmq_timer_event(int id_) {
         m_pub.attach_inner_code(m_innerCode);
         if (subscribe(m_innerCode)) {
             LOG_INFO("Subscribe success, start recv market datas...");
+            time_t dft = timeutil::get_HMS_diff_time(config::Instance()->get_mdconfig_clear_signal_time());
+            timers_add(timer_subscribe, dft * 1000, this);
+            
+            LOG_INFO("For the first subscription,Application will subscribe marketdata after 200ms..subscribe time is {}, the next subscribe waiting time is {} seconds.",
+                    config::Instance()->get_mdconfig_clear_signal_time(), dft);
             
         } else {
             LOG_ERROR("A subscription failure occurred, it will retry after 5 seconds.");
@@ -181,11 +196,7 @@ void md_engine::zmq_timer_event(int id_) {
     
     if(id_ == timer_send_clear_signal) {
         timers_cancel(id_,this);
-        time_t dft = timeutil::get_HMS_diff_time(config::Instance()->get_mdconfig_clear_signal_time());
-        LOG_INFO("Clear_signal time is {}, next send clear signal waiting time is {} seconds", config::Instance()->get_mdconfig_clear_signal_time(), dft);
-        timers_add(timer_send_clear_signal, dft * 1000, this);
-        LOG_INFO("After 200ms will resubscribe market data.");
-        timers_add(timer_subscribe, 200, this);
+        send_clear_signal();
     }
 
 }
@@ -197,13 +208,6 @@ void md_engine::process_update_innercode(void* metadata) {
         m_pub.attach_inner_code(pmap);
         if (m_bFirstSubscribe) {
             timers_add(timer_subscribe, 200, this);
-            
-            time_t dft = timeutil::get_HMS_diff_time(config::Instance()->get_mdconfig_clear_signal_time());
-            timers_add(timer_send_clear_signal, dft * 1000, this);
-            
-            LOG_INFO("For the first subscription,Application will subscribe marketdata after 200ms..Clear_signal time is {}, the next send clear signal waiting time is {} seconds.",
-                    config::Instance()->get_mdconfig_clear_signal_time(), dft);
- 
             m_bFirstSubscribe = false;
         }
     } else {
@@ -211,3 +215,11 @@ void md_engine::process_update_innercode(void* metadata) {
     }
 
 }
+
+void md_engine::process_tradingday_changed(const char* tradingday) {
+    if(tradingday) {
+        //timers_add(timer_send_clear_signal, 1, this);
+        send_clear_signal(tradingday);
+    }
+}
+

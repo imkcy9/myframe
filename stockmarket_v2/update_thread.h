@@ -33,13 +33,15 @@ private:
     enum timer_id {
         timer_update = 0,
         timer_first_update_from_sina,
-        timer_first_update_from_mysql
+        timer_first_update_from_mysql,
+        timer_tradingday_check
     };
     void before_end() override;
 
     
     stcode_updator* m_stcoe_updator;
     mailbox_event* m_mailevent_handler;
+    std::string m_tradingday;
 };
 
 #endif /* UPDATE_THREAD_H */

@@ -48,9 +48,12 @@ private:
     
     void process_update_innercode(void* metadata) override;
     
+    void process_tradingday_changed(const char* tradingday) override;
+    
     void before_end() override;
     
     void send_clear_signal();
+    void send_clear_signal(const char* tradingday);
 
     mdstock_collector m_md_cllector;
     zmq::socket_t m_inner_sub;

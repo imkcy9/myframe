@@ -38,6 +38,7 @@ bool update_thread::init() {
         }
     }
     timers_add(timer_update, 600 * 1000, this);
+    timers_add(timer_tradingday_check, 10 * 1000,this);
     return true;
 }
 
@@ -60,6 +61,21 @@ void update_thread::zmq_timer_event(int id_) {
         LOG_INFO("Loading EI map from local database before subscribing marketdata...");
         update_innercode(false);
         timers_cancel(id_,this);
+    }
+    if(id_ == timer_tradingday_check) {
+        std::string td = m_stcoe_updator->get_tradingdday();
+        if(td == "") {
+            LOG_ERROR("交易日获取失败");
+            return;
+        }
+        LOG_DEBUG("当前交易日 {} ", td);
+        if(m_tradingday == "") {
+            m_tradingday = td;
+        } else if (m_tradingday != td && td.length() == 8) {
+            m_tradingday = td;
+            m_mailevent_handler->send_tradingday_changed(m_tradingday.c_str());
+            LOG_DEBUG("切换交易日 {} ", td);
+        }
     }
 }
 

@@ -166,6 +166,21 @@ bool stcode_updator::update_code() {
     return true;
 }
 
+std::string stcode_updator::get_tradingdday() {
+    std::string td;
+    try {
+        td = m_stcode.get_tradingday();
+        
+    } catch (sql::SQLException& e) {
+        LOG_ERROR("【获取交易日】异常：sql::SQLException {}", e.what());
+    } catch (std::exception& e) {
+        LOG_ERROR("【获取交易日】异常：std::exception ErrText(%s)", e.what());
+
+    }
+    return td;
+}
+
+
 std::unordered_map<std::string, tick_info>* stcode_updator::get_securitycode_map() {
     auto m_innerCodeMap = new std::unordered_map<std::string, tick_info>();
     try {

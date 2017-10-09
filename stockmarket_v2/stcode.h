@@ -189,6 +189,20 @@ public:
 
         delete res;
     }
+    
+    std::string get_tradingday() {
+        sql::ResultSet* res = query("SELECT TradingDay from t_ftdctradingday where CURRENT_TIMESTAMP BETWEEN StartTime AND EndTime;");
+        sql::SQLString td;
+        while (res && res->next()) {
+            td = res->getString("TradingDay");
+
+            //LOG_ERROR("search result {}", td);
+        }
+        if(res)
+            delete res;
+        
+        return td.c_str();
+    }
 
     sql::ResultSet* get_by_securitycode(std::string& securityCode) {
         //std::string sc = securityCode;

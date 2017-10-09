@@ -65,6 +65,8 @@ public:
     //更新股票基础数据到数据库
     bool update_code();
     
+    std::string get_tradingdday();
+    
     void stop_update() {
         m_stop = true;
     }

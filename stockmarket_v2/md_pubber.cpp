@@ -62,18 +62,18 @@ md_pubber::md_pubber(zmq::context_t& ctx, int type_)
 }
 
 md_pubber::~md_pubber() {
-    if(m_innerCode){
+    if (m_innerCode) {
         delete m_innerCode;
         m_innerCode = NULL;
     }
 }
 
 void md_pubber::attach_inner_code(std::unordered_map<std::string, tick_info>* innerCode) {
-    if(!innerCode || innerCode->empty()) {
+    if (!innerCode || innerCode->empty()) {
         LOG_ERROR("发现致命的BUG，码表为空.");
         return;
     }
-    
+
     if (m_innerCode) {
         delete m_innerCode;
         m_innerCode = NULL;
@@ -82,7 +82,7 @@ void md_pubber::attach_inner_code(std::unordered_map<std::string, tick_info>* in
 }
 
 bool md_pubber::publish(zmq::message_t& msg) {
-    if(!m_innerCode || m_innerCode->empty()) {
+    if (!m_innerCode || m_innerCode->empty()) {
         LOG_ERROR("发现致命的BUG，码表为空.");
         return false;
     }
@@ -94,25 +94,34 @@ bool md_pubber::publish(zmq::message_t& msg) {
 
 void md_pubber::publish_the_last() {
     for (auto it = m_lastTickMap.begin(); it != m_lastTickMap.end(); it++) {
+#ifdef USE_ZMQ_PUB
         send_message(it->second.mutable_market_data()->securitycode().c_str(),
                 it->second.mutable_market_data()->securitycode().size() + 1,
-                SNAPSHOT_CMD,
                 it->second);
+#else
+        send_message(SNAPSHOT_CMD, it->second);
+#endif
     }
 }
 
-void md_pubber::send_message(const char* prefix, size_t prefix_len, ushort cmd, google::protobuf::Message& message) {
 #ifdef USE_ZMQ_PUB
-    send(prefix, prefix_len, ZMQ_SNDMORE);
-#else
-    send("", 0, ZMQ_SNDMORE);
-#endif
-    send(&cmd, sizeof(cmd), ZMQ_SNDMORE);
+
+void md_pubber::send_message(const char* prefix, size_t prefix_len, google::protobuf::Message& message) {
+    send(prefix, prefix_len + 1, ZMQ_SNDMORE);
     zmq::message_t msg(message.ByteSizeLong());
-    message.SerializeToArray(msg.data(),msg.size());
+    message.SerializeToArray(msg.data(), msg.size());
     send(msg);
 }
+#else
 
+void md_pubber::send_message(ushort cmd, google::protobuf::Message& message) {
+    send("", 0, ZMQ_SNDMORE);
+    send(&cmd, sizeof (cmd), ZMQ_SNDMORE);
+    zmq::message_t msg(message.ByteSizeLong());
+    message.SerializeToArray(msg.data(), msg.size());
+    send(msg);
+}
+#endif
 
 bool md_pubber::check_tick(std::vector<std::string>& vec) {
     size_t size = vec.size();
@@ -177,11 +186,11 @@ void md_pubber::transform_to_protobuf(zmq::message_t& msg) {
             continue;
         }
 
-        
+
         protomessage pmes;
-        
+
         depthmarketdata& tick = *(pmes.mutable_market_data());
-        
+
         tick.set_securitycode(vec[E_SECURITY_CODE]);
         tick.set_securityname(vec[E_SECURITY_NAME]);
         tick.set_openprice(atof(vec[E_OPEN_PRICE].c_str()));
@@ -222,26 +231,25 @@ void md_pubber::transform_to_protobuf(zmq::message_t& msg) {
         tick.set_time(vec[E_TIME]);
         tick.set_status((vec[E_STATUS]));
 
-        
+
         string updTime = vec[E_DATE] + " " + vec[E_TIME];
         time_t timeValue = 0;
 
         struct tm tmInfo;
-        memset(&tmInfo, 0, sizeof(tmInfo));
-        if (NULL != strptime(updTime.c_str(), "%Y-%m-%d %H:%M:%S", &tmInfo))
-        {
-                timeValue = mktime(&tmInfo);
+        memset(&tmInfo, 0, sizeof (tmInfo));
+        if (NULL != strptime(updTime.c_str(), "%Y-%m-%d %H:%M:%S", &tmInfo)) {
+            timeValue = mktime(&tmInfo);
         }
-	
+
         tick.set_updtime(timeValue);
         //tick.set_turnoverrate()
-        
+
 
         std::unordered_map<std::string, tick_info>::iterator it = m_innerCode->find(vec[E_SECURITY_CODE]);
         if (it != m_innerCode->end()) {
             tick.set_ei(it->second.ei);
             tick.set_volume(tick.volume() * it->second.vol_multiple);
-            tick.set_turnoverrate(tick.volume() / ((double)it->second.circle_share * 10000));
+            tick.set_turnoverrate(tick.volume() / ((double) it->second.circle_share * 10000));
             tick.set_avpri(tick.turnover() / (double) tick.volume());
             tick.set_sa((tick.highprice() - tick.lowprice()) / tick.precloseprice());
             tick.set_tradvol(it->second.last_vol == 0 ? 0 : tick.volume() - it->second.last_vol);
@@ -261,9 +269,12 @@ void md_pubber::transform_to_protobuf(zmq::message_t& msg) {
             //it->second.isFirstTick = false;
             //continue;
             //}
-            
-            send_message(tick.securitycode().c_str(),tick.securitycode().size()+1,SNAPSHOT_CMD,pmes);
-            
+
+#ifdef USE_ZMQ_PUB
+            send_message(tick.securitycode().c_str(), tick.securitycode().size() + 1, pmes);
+#else
+            send_message(SNAPSHOT_CMD, pmes);
+#endif
             //std::string out;
             //google::protobuf::util::MessageToJsonString(tick,&out);
             //LOG_DEBUG("{}",out);

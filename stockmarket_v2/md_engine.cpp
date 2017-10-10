@@ -78,7 +78,12 @@ void md_engine::send_clear_signal() {
     protomessage msg;
     msg.mutable_clear_signal()->set_tradingday(timeutil::get_strtime(time(0), "%Y%m%d"));
     msg.mutable_clear_signal()->set_update_time(time(0));
-    m_pub.send_message("", 0, TRADINGDAY_CHANGED, msg);
+#ifdef USE_ZMQ_PUB
+    m_pub.send_message(TRADINGDAY_CHANGED, CMD_SIZE, msg);
+#else
+    m_pub.send_message(TRADINGDAY_CHANGED, msg);
+#endif
+    
     LOG_INFO("发送清盘信号成功，交易日 {}", msg.mutable_clear_signal()->tradingday());
 }
 
@@ -86,7 +91,13 @@ void md_engine::send_clear_signal(const char* tradingday) {
     protomessage msg;
     msg.mutable_clear_signal()->set_tradingday(tradingday);
     msg.mutable_clear_signal()->set_update_time(time(0));
-    m_pub.send_message("", 0, TRADINGDAY_CHANGED, msg);
+    
+#ifdef USE_ZMQ_PUB
+    m_pub.send_message(TRADINGDAY_CHANGED, CMD_SIZE, msg);
+#else
+    m_pub.send_message(TRADINGDAY_CHANGED, msg);
+#endif
+    
     LOG_INFO("发送清盘信号成功，交易日 {}", msg.mutable_clear_signal()->tradingday());
 }
 
@@ -189,7 +200,13 @@ void md_engine::zmq_timer_event(int id_) {
         protomessage protomsg;
         heartbeat& hb = *protomsg.mutable_heart_beat();
         hb.set_update_time(time(0));
-        m_pub.send_message("", 0, HEARTBEAT_CMD, protomsg);
+        
+#ifdef USE_ZMQ_PUB
+        m_pub.send_message(HEARTBEAT_CMD, CMD_SIZE, protomsg);
+#else
+        m_pub.send_message(HEARTBEAT_CMD, protomsg);
+#endif
+        
         LOG_DEBUG("Pubber sends heartbeat...");
         m_zmq_monitor.check_event();
     }

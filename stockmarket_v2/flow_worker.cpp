@@ -11,6 +11,8 @@
  * Created on 2017年9月21日, 下午4:22
  */
 
+#include <zmq.h>
+
 #include "flow_worker.h"
 #include "depthmarketdata.pb.h"
 #include "google/protobuf/util/json_util.h"
@@ -21,14 +23,26 @@
 
 flow_worker::flow_worker(zmq::context_t* ctx)
 : zmq_poller_reactor(ctx)
+#ifdef USE_ZMQ_PUB
+, m_sub(*ctx, ZMQ_SUB) {
+#else
 , m_sub(*ctx, ZMQ_YSSTREAM) {
+#endif
 }
 
 flow_worker::~flow_worker() {
+    m_sub.close();
+    if(m_fileflow) {
+        delete m_fileflow;
+    }
 }
 
 bool flow_worker::init() {
     try {
+#ifdef USE_ZMQ_PUB
+        m_sub.setsockopt(ZMQ_SUBSCRIBE,"",0);
+#else
+#endif
         m_sub.connect(config::Instance()->get_mdconfig_bind_addr());
         //m_sub.connect("ipc:///home/quote/ipc/test");
         add_socket(&m_sub, this);
@@ -48,6 +62,15 @@ void flow_worker::zmq_in_event(zmq::socket_t* socket) {
     zmq::message_t msg;
     m_sub.recv(&msg);
     assert(msg.more());
+#ifdef USE_ZMQ_PUB
+    m_sub.recv(&msg);
+    assert(!msg.more());
+    protomessage promsg;
+    promsg.ParseFromArray(msg.data(),msg.size());
+    if(promsg.which_message_case() == protomessage::kMarketData) {
+        m_fileflow->append(msg.data(), msg.size());
+    }
+#else
     m_sub.recv(&msg);
     uint16_t cmd = *((uint16_t*)msg.data());
     assert(msg.more());
@@ -56,6 +79,9 @@ void flow_worker::zmq_in_event(zmq::socket_t* socket) {
     //只缓存快照数据
     if(cmd == SNAPSHOT_CMD)
         m_fileflow->append(msg.data(), msg.size());
+#endif
+    
+
 }
 
 void flow_worker::zmq_timer_event(int id_) {

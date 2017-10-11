@@ -24,6 +24,7 @@
     
     <zookeeper
         zookeeper_serverip="139.196.94.59:1181"
+	zookeeper_register_value="tcp://192.168.19.193:58005"
     />
     <!-- 
             数据库配置

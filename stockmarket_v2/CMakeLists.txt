@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.6)           # CMake 最低版本要求，低于则构建过程会被终止。 
+CMAKE_MINIMUM_REQUIRED(VERSION 2.6)           # CMake 最低版本要求，低于则构建过程会被终止。 
 PROJECT(stockmarket_v2)
 
 AUX_SOURCE_DIRECTORY(./ SRC_LIST)
@@ -33,7 +33,7 @@ INCLUDE_DIRECTORIES(
 )
 
 LINK_DIRECTORIES(
-	../public/lib/centos
+	../public/lib/ubuntu
 )
 
 ADD_EXECUTABLE(stockmarket_v2 ${SRC_LIST})

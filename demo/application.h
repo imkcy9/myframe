@@ -40,7 +40,7 @@ private:
     bool init_config();
     char g_configfilename[128];
     bool isdaemon = false;
-    zmq::context_t m_ctx;
+    zmq::context_t* m_ctx;
 };
 
 #endif /* APPLICATION_H */

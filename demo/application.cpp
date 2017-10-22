@@ -33,17 +33,20 @@ using namespace sql;
 application::application() 
 :m_update_thread(0)
 ,isdaemon(false)
-,m_ctx(4){
+,m_ctx(0){
 
 }
 
 application::~application() {
-    m_ctx.close();
+    if(m_ctx) {
+        m_ctx->close();
+	delete m_ctx;
+    }
 }
 
 bool application::before_start() {
     if(!m_update_thread) {
-        m_update_thread = new update_thread(&m_ctx);
+        m_update_thread = new update_thread(m_ctx);
     }
     if(!m_update_thread->init())
         return false;

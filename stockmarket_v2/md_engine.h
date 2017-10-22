@@ -23,7 +23,7 @@
 
 
 
-class md_engine : public zmq_poller_reactor {
+class md_engine : public zmq_poller_reactor, public zmq_poll_events{
 public:
     md_engine(zmq::context_t* ctx);
     virtual ~md_engine();

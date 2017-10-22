@@ -21,7 +21,7 @@
 #include "zmq_poll_events.h"
 #include "mailbox_event.h"
 
-class zmq_poller_reactor : public thread_t , public timer, public mailbox_event, public zmq_poll_events {
+class zmq_poller_reactor : public thread_t , public timer, public mailbox_event {
 public:
     zmq_poller_reactor(zmq::context_t* ctx);
 

@@ -16,7 +16,7 @@
 #include "zmq_poller_reactor.h"
 #include "file_flow/file_flow.h"
 
-class flow_worker : public zmq_poller_reactor {
+class flow_worker : public zmq_poller_reactor, public zmq_poll_events {
 public:
     flow_worker(zmq::context_t* ctx);
 

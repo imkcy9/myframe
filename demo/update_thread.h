@@ -15,7 +15,7 @@
 #define UPDATE_THREAD_H
 #include "zmq_poller_reactor.h"
 
-class update_thread : public zmq_poller_reactor {
+class update_thread : public zmq_poller_reactor, public zmq_poll_events {
 public:
     update_thread(zmq::context_t* ctx);
     virtual ~update_thread();

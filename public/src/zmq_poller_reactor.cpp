@@ -14,10 +14,10 @@
 #include <zmq.h>
 
 #include "zmq_poller_reactor.h"
+#include "log.h"
 
-zmq_poller_reactor::zmq_poller_reactor(zmq::context_t* ctx)
+zmq_poller_reactor::zmq_poller_reactor()
 : mailbox_event(&m_mailbox)
-,m_ctx(ctx)
 , m_stop(false) {
 }
 
@@ -28,9 +28,17 @@ void zmq_poller_reactor::run() {
 
     int socket_count = m_poll_sockets.size() + 1;
     zmq::pollitem_t *items = (zmq::pollitem_t *)malloc(sizeof(zmq::pollitem_t) * (m_poll_sockets.size() + 1));
-    items[0] = {0, m_mailbox.get_fd(), ZMQ_POLLIN, 0};
+    //items[0] = {0, m_mailbox.get_fd(), ZMQ_POLLIN, 0};
+    items[0].socket = 0;
+    items[0].fd = m_mailbox.get_fd();
+    items[0].events = ZMQ_POLLIN;
+    items[0].revents = 0;
     for(size_t i = 0; i < m_poll_sockets.size(); i++) {
-        items[i+1] = {*(m_poll_sockets[i].first), 0, ZMQ_POLLIN, 0};
+        //items[i+1] = {*(m_poll_sockets[i].first), 0, ZMQ_POLLIN, 0};
+        items[i + 1].socket = *(m_poll_sockets[i].first);
+        items[i + 1].fd = 0;
+        items[i + 1].events = ZMQ_POLLIN;
+        items[i + 1].revents = 0;
     }
 
     while (!m_stop) {
@@ -43,7 +51,11 @@ void zmq_poller_reactor::run() {
         }
         int rc = zmq::poll(items, socket_count, wait_time);
         if (rc == 0) {
-            //LOG_INFO("timer out ");
+            LOG_INFO("timer out rc == 0");
+            continue;
+        }
+        if (rc == -1) {
+            LOG_INFO("poll error rc == -1");
             continue;
         }
 
@@ -52,7 +64,7 @@ void zmq_poller_reactor::run() {
             int rc = m_mailbox.recv(&event_, 0);
             while (rc == 0 || errno == EINTR) {
                 if (rc == 0) {
-                    LOG_DEBUG("mailbox event recv {} ", event_.type);
+                    LOG_INFO("mailbox event recv %d", event_.type);
                     process_event(event_);
                 }
                 rc = m_mailbox.recv(&event_, 0);

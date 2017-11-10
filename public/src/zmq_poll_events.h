@@ -19,9 +19,9 @@ public:
     zmq_poll_events(){};
     virtual ~zmq_poll_events(){};
     
-    virtual void zmq_in_event(zmq::socket_t* socket) {};
-    virtual void zmq_out_event() {};
-    virtual void zmq_timer_event(int id_) {};
+    virtual void zmq_in_event(zmq::socket_t* socket) {assert(false);};
+    virtual void zmq_out_event() {assert(false);};
+    virtual void zmq_timer_event(int id_) {assert(false);};
 private:
 
 };

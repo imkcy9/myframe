@@ -13,6 +13,8 @@
 
 #ifndef LOG_H
 #define LOG_H
+
+#ifdef USE_SPDLOG
 #include "spdlog/spdlog.h"
 
 #ifdef SPDLOG_TRACE_ON
@@ -31,8 +33,20 @@
 #define LOG_ERROR(...) spdlog::get("Log")->error(__VA_ARGS__)
 #define LOG_CRITICAL(...) spdlog::get("Log")->critical(__VA_ARGS__)
 #endif
+#endif
+
+#ifdef USE_YTLOG
+#include <yt/log/ostreamlogger.h>
+#include <yt/log/log.h>
+#include <yt/log/datefilelogger.h>
+#include <yt/log/logpriority.h>
+#endif
+#ifdef USE_GLOG
+#include "glog/logging.h"
+#endif
+
 namespace LOGGER {
-    void init(bool is_daemon,int level,const char* log_path);
+    bool init(const char* app_name, bool is_daemon,int level,const char* log_path);
     void dropall();
 }
 

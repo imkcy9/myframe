@@ -14,8 +14,9 @@
 #ifndef UPDATE_THREAD_H
 #define UPDATE_THREAD_H
 #include "zmq_poller_reactor.h"
+#include "zmq_ystech_msg_dispatcher.h"
 
-class update_thread : public zmq_poller_reactor, public zmq_poll_events {
+class update_thread : public zmq_ystech_msg_dispatcher<update_thread>, public zmq_poller_reactor {
 public:
     update_thread(zmq::context_t* ctx);
     virtual ~update_thread();

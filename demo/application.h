@@ -23,7 +23,7 @@
 #include "log.h"
 #include "config.h"
 #include "thread.h"
-#include "update_thread.h"
+#include "zmq_poller_reactor.h"
 
 template<class PROCESS>
 class application : public thread_t {
@@ -40,7 +40,7 @@ public:
     void stop();
 private:
 
-    PROCESS* m_process;
+    zmq_poller_reactor* m_process;
     
     bool init_config();
     char g_configfilename[128];
@@ -66,8 +66,11 @@ application<PROCESS>::~application() {
 
 template<class PROCESS>
 bool application<PROCESS>::before_start() {
+    if(!m_ctx) {
+        m_ctx = new zmq::context_t(4);
+    }
     if(!m_process) {
-        m_process = new update_thread(m_ctx);
+        m_process = new PROCESS(m_ctx);
     }
     if(!m_process->init())
         return false;

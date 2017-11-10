@@ -12,9 +12,9 @@
  */
 
 #include "update_thread.h"
+#include "log.h"
 
 update_thread::update_thread(zmq::context_t* ctx)
-: zmq_poller_reactor(ctx)
  {
 }
 

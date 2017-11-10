@@ -13,6 +13,7 @@
 
 #include <cstdlib>
 #include "application.h"
+#include "update_thread.h"
 using namespace std;
 
 /*
@@ -20,7 +21,7 @@ using namespace std;
  */
 void prog_exit(int signo);
 
-application app;
+application<update_thread> app;
 int main(int argc, char** argv) {
 
     bool ret = app.init_main(argc,argv,prog_exit);

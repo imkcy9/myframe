@@ -10,6 +10,7 @@
     <basic 
         logfile = "../log/stockmarket.txt" 
         logPriority="1"
+        logprefix = "demo"
     />
 
     

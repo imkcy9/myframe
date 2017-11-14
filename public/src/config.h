@@ -55,7 +55,8 @@ public:
     //add defines here 
     DECLARE_CONFIG_GETSTR(config,basic,logfile)
     DECLARE_CONFIG_GETINT(config,basic,logPriority)
-
+    DECLARE_CONFIG_GETSTR(config,basic,logprefix)
+            
     DECLARE_CONFIG_GETSTR(config,mysqlconn,dbip)
     DECLARE_CONFIG_GETSTR(config,mysqlconn,username)
     DECLARE_CONFIG_GETSTR(config,mysqlconn,passwd)

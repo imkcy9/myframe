@@ -15,7 +15,9 @@
 #include "log.h"
 
 update_thread::update_thread(zmq::context_t* ctx)
+:m_sock(*ctx,ZMQ_YSSTREAM)
  {
+    add_message_mapping(1005,&update_thread::on_recv_tick);
 }
 
 update_thread::~update_thread() {
@@ -26,10 +28,14 @@ bool update_thread::init() {
     timers_add(timer_test, 1 * 1000, this);
     timers_add(timer_test2, 2 * 1000, this);
     timers_add(timer_test3, 10 * 1000, this);
+    
+    m_sock.connect("tcp://192.168.19.192:59001");
+    add_socket(&m_sock,this);
     return true;
 }
 
 void update_thread::before_end() {
+    m_sock.close();
     LOG_INFO("update_thread end");
 }
 
@@ -51,5 +57,8 @@ void update_thread::zmq_timer_event(int id_) {
     }
 }
 
-
+int update_thread::on_recv_tick(ushort cmd, void *body, size_t body_size) {
+    LOG_INFO("{}, {}",cmd,(char*)body);
+    return 0;
+}
 

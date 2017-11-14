@@ -25,6 +25,7 @@ public:
 
     void zmq_timer_event(int id_) override;
 
+    int on_recv_tick(ushort cmd, void *body, size_t body_size);
 private:
     enum timer_id {
         timer_test = 0,
@@ -35,6 +36,7 @@ private:
 
     void before_end() override;
 
+    zmq::socket_t m_sock;
 };
 
 #endif /* UPDATE_THREAD_H */

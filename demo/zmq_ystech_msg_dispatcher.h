@@ -20,7 +20,10 @@
 template<class T>
 class zmq_ystech_msg_dispatcher : public zmq_poll_events {
 protected:
-    typedef int (T:: *msg_func) (short unsigned int cmd, void *body, long unsigned int body_size);
+    typedef int (T:: *msg_func) (ushort cmd, void *body, size_t body_size);
+    void add_message_mapping(ushort cmd, msg_func func) {
+        m_cmdmapping[cmd] = func;
+    }
 public:
     zmq_ystech_msg_dispatcher(){};
 
@@ -44,6 +47,8 @@ public:
             (static_cast <T *> (this)->*it->second)(ucmd, body.data(), body.size());
         }
     };
+    
+    
 
 private:
     //msg_func mappingfunc;

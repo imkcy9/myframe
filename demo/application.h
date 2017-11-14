@@ -87,7 +87,7 @@ template<class PROCESS>
 void application<PROCESS>::before_end() {
     m_process->join();
     LOG_INFO("application end");
-    LOGGER::dropall();
+    //LOGGER::dropall();
 }
 
 template<class PROCESS>

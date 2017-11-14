@@ -11,6 +11,8 @@
  * Created on 2017年9月20日, 下午4:16
  */
 
+#include <zmq.h>
+
 #include "update_thread.h"
 #include "log.h"
 
@@ -18,6 +20,7 @@ update_thread::update_thread(zmq::context_t* ctx)
 :m_sock(*ctx,ZMQ_YSSTREAM)
  {
     add_message_mapping(1005,&update_thread::on_recv_tick);
+    add_message_mapping(1004,&update_thread::on_recv_hb);
 }
 
 update_thread::~update_thread() {
@@ -29,7 +32,8 @@ bool update_thread::init() {
     timers_add(timer_test2, 2 * 1000, this);
     timers_add(timer_test3, 10 * 1000, this);
     
-    m_sock.connect("tcp://192.168.19.192:59001");
+    m_sock.setsockopt(ZMQ_CONNECT_RID,"server",6);
+    m_sock.connect("tcp://192.168.19.192:59000");
     add_socket(&m_sock,this);
     return true;
 }
@@ -46,7 +50,13 @@ bool update_thread::before_start() {
 
 void update_thread::zmq_timer_event(int id_) {
     if(id_ == timer_test) {
-        LOG_INFO("timer_test");
+        LOG_INFO("send hb");
+        ushort cmd = 1004;
+        m_sock.send("server",6,ZMQ_SNDMORE);
+        m_sock.send(&cmd,sizeof(cmd),ZMQ_SNDMORE);
+        m_sock.send("4",2);
+        //timers_cancel(timer_test,this);
+        
     }
     if(id_ == timer_test2) {
         LOG_INFO("timer_test2");
@@ -62,3 +72,7 @@ int update_thread::on_recv_tick(ushort cmd, void *body, size_t body_size) {
     return 0;
 }
 
+int update_thread::on_recv_hb(ushort cmd, void* body, size_t body_size) {
+    LOG_INFO("{}, {}",cmd,(char*)body);
+    return 0;
+}

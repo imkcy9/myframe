@@ -42,7 +42,7 @@ public:
         socket->recv(&body);
         ZMQ_ASSERT(!body.more());
         typename std::unordered_map<ushort,msg_func>::iterator it = m_cmdmapping.find(ucmd);
-        if(it->second) {
+        if(it != m_cmdmapping.end() && it->second) {
             //next = it->second;
             (static_cast <T *> (this)->*it->second)(ucmd, body.data(), body.size());
         }

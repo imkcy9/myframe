@@ -22,11 +22,11 @@
 #include "md_pubber.h"
 
 flow_worker::flow_worker(zmq::context_t* ctx)
-: zmq_poller_reactor(ctx)
+:
 #ifdef USE_ZMQ_PUB
-, m_sub(*ctx, ZMQ_SUB) {
+ m_sub(*ctx, ZMQ_SUB) {
 #else
-, m_sub(*ctx, ZMQ_YSSTREAM) {
+ m_sub(*ctx, ZMQ_YSSTREAM) {
 #endif
 }
 

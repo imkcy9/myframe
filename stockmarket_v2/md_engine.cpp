@@ -17,16 +17,16 @@
 #include "util.h"
 
 md_engine::md_engine(zmq::context_t* ctx)
-: zmq_poller_reactor(ctx)
-, m_md_cllector(ctx)
+: m_md_cllector(ctx)
 , m_inner_sub(*ctx, ZMQ_SUB)
 , m_stcoe_updator(0)
 #ifdef USE_ZMQ_PUB
 , m_pub(*ctx, ZMQ_PUB)
 #else
-, m_pub(*ctx, ZMQ_YSSTREAM)
+, m_pub(*ctx, ZMQ_YSSTREAM, config::Instance()->get_mdconfig_tick_format())
 #endif
-, m_bFirstSubscribe(true) {
+, m_bFirstSubscribe(true) 
+{
 
 }
 

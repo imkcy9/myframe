@@ -14,9 +14,7 @@
 #include "update_thread.h"
 
 update_thread::update_thread(zmq::context_t* ctx, mailbox_event* mailevent_handler)
-: zmq_poller_reactor(ctx)
-, m_stcoe_updator(0)
-, m_mailevent_handler(mailevent_handler) {
+:m_mailevent_handler(mailevent_handler) {
 }
 
 update_thread::~update_thread() {

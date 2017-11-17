@@ -32,7 +32,7 @@
 struct tick_info;
 class md_pubber : public zmq::socket_t {
 public:
-    md_pubber(zmq::context_t& ctx, int type_);
+    md_pubber(zmq::context_t& ctx, int type_, bool use_prorobuf);
     virtual ~md_pubber();
     
     void attach_inner_code(std::unordered_map<std::string, tick_info>* innerCode);
@@ -52,6 +52,7 @@ private:
     void transform_to_protobuf(zmq::message_t& msg);
     std::unordered_map<std::string, tick_info>* m_innerCode;
     std::unordered_map<std::string, protomessage> m_lastTickMap;
+    bool m_use_protobuf;
 };
 
 #endif /* MD_PUBBER_H */

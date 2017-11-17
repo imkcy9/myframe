@@ -11,6 +11,8 @@
  * Created on 2017年9月15日, 下午4:44
  */
 
+#include <zmq.h>
+
 #include "md_pubber.h"
 #include "stcode_updator.h"
 #include "depthmarketdata.pb.h"
@@ -55,9 +57,10 @@ enum STOCK_DEPTHMARKET {
     E_STATUS
 };
 
-md_pubber::md_pubber(zmq::context_t& ctx, int type_)
+md_pubber::md_pubber(zmq::context_t& ctx, int type_, bool use_protobuf)
 : zmq::socket_t(ctx, type_)
-, m_innerCode(0) {
+, m_innerCode(0) 
+, m_use_protobuf(use_protobuf) {
 
 }
 
@@ -117,9 +120,21 @@ void md_pubber::send_message(const char* prefix, size_t prefix_len, google::prot
 void md_pubber::send_message(ushort cmd, google::protobuf::Message& message) {
     send("", 0, ZMQ_SNDMORE);
     send(&cmd, sizeof (cmd), ZMQ_SNDMORE);
-    zmq::message_t msg(message.ByteSizeLong());
-    message.SerializeToArray(msg.data(), msg.size());
-    send(msg);
+    
+    if(m_use_protobuf) {
+        zmq::message_t msg(message.ByteSizeLong());
+        message.SerializeToArray(msg.data(), msg.size());
+        send(msg);
+    } else {
+        std::string msg;
+        google::protobuf::util::JsonOptions option;
+        option.always_print_enums_as_ints = true;
+        option.always_print_primitive_fields = true;
+        google::protobuf::util::MessageToJsonString(message,&msg,option);
+        send(msg.c_str(),msg.size());
+        LOG_DEBUG("{}",msg);
+    }
+    
 }
 #endif
 
@@ -162,6 +177,7 @@ bool md_pubber::check_tick(std::vector<std::string>& vec) {
 void md_pubber::transform_to_protobuf(zmq::message_t& msg) {
     size_t size = msg.size();
     char* tick = (char*) msg.data();
+    LOG_TRACE("{}",tick);
 
     if (!size) {
         return;
@@ -273,6 +289,8 @@ void md_pubber::transform_to_protobuf(zmq::message_t& msg) {
 #ifdef USE_ZMQ_PUB
             send_message(tick.securitycode().c_str(), tick.securitycode().size() + 1, pmes);
 #else
+            int sid = tick.ei();
+            this->setsockopt(ZMQ_YSSTREAM_SID,&sid,sizeof(sid));
             send_message(SNAPSHOT_CMD, pmes);
 #endif
             //std::string out;

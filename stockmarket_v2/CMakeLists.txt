@@ -17,7 +17,7 @@ SET(CMAKE_CXX_COMPILER g++)
 #add_compile_options(-std=c++11)
 #add_compile_options(-std=c++11)
 #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-ADD_DEFINITIONS(-std=c++11 -g -Wreorder -DTHREADED -DUSE_ZMQ_PUB -DZMQ_BUILD_DRAFT_API -DSPDLOG_TRACE_ON -DLINUX -Werror=return-type -Werror=nonnull -Werror=invalid-offsetof -Wno-deprecated ${CMAKE_CXX_FLAGS})
+ADD_DEFINITIONS(-std=c++11 -g -Wreorder -DUSE_SPDLOG -DTHREADED -DZMQ_BUILD_DRAFT_API -DSPDLOG_TRACE_ON -DLINUX -Werror=return-type -Werror=nonnull -Werror=invalid-offsetof -Wno-deprecated ${CMAKE_CXX_FLAGS})
 
 INCLUDE_DIRECTORIES(
 	./src/

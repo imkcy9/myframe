@@ -68,6 +68,7 @@ public:
     DECLARE_CONFIG_GETSTR(config,mdconfig,storage_path);
     DECLARE_CONFIG_GETBOOL(config,mdconfig,is_storage);
     DECLARE_CONFIG_GETBOOL(config,mdconfig,update_innercode_from_sina_before_subscribe);
+    DECLARE_CONFIG_GETBOOL(config,mdconfig,tick_format);
     
     DECLARE_CONFIG_GETSTR(config,zookeeper,zookeeper_serverip);
     DECLARE_CONFIG_GETSTR(config,zookeeper,zookeeper_register_value);

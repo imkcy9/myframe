@@ -259,6 +259,34 @@ class depthmarketdata : public ::google::protobuf::Message /* @@protoc_insertion
   ::std::string* release_status();
   void set_allocated_status(::std::string* status);
 
+  // string field5 = 55;
+  void clear_field5();
+  static const int kField5FieldNumber = 55;
+  const ::std::string& field5() const;
+  void set_field5(const ::std::string& value);
+  #if LANG_CXX11
+  void set_field5(::std::string&& value);
+  #endif
+  void set_field5(const char* value);
+  void set_field5(const char* value, size_t size);
+  ::std::string* mutable_field5();
+  ::std::string* release_field5();
+  void set_allocated_field5(::std::string* field5);
+
+  // string field6 = 56;
+  void clear_field6();
+  static const int kField6FieldNumber = 56;
+  const ::std::string& field6() const;
+  void set_field6(const ::std::string& value);
+  #if LANG_CXX11
+  void set_field6(::std::string&& value);
+  #endif
+  void set_field6(const char* value);
+  void set_field6(const char* value, size_t size);
+  ::std::string* mutable_field6();
+  ::std::string* release_field6();
+  void set_allocated_field6(::std::string* field6);
+
   // int64 Ei = 1;
   void clear_ei();
   static const int kEiFieldNumber = 1;
@@ -307,23 +335,23 @@ class depthmarketdata : public ::google::protobuf::Message /* @@protoc_insertion
   double askprice() const;
   void set_askprice(double value);
 
-  // int64 Volume = 11;
-  void clear_volume();
-  static const int kVolumeFieldNumber = 11;
-  ::google::protobuf::int64 volume() const;
-  void set_volume(::google::protobuf::int64 value);
-
   // double Turnover = 12;
   void clear_turnover();
   static const int kTurnoverFieldNumber = 12;
   double turnover() const;
   void set_turnover(double value);
 
-  // int64 UpdTime = 20;
+  // uint32 Volume = 11;
+  void clear_volume();
+  static const int kVolumeFieldNumber = 11;
+  ::google::protobuf::uint32 volume() const;
+  void set_volume(::google::protobuf::uint32 value);
+
+  // uint32 UpdTime = 20;
   void clear_updtime();
   static const int kUpdTimeFieldNumber = 20;
-  ::google::protobuf::int64 updtime() const;
-  void set_updtime(::google::protobuf::int64 value);
+  ::google::protobuf::uint32 updtime() const;
+  void set_updtime(::google::protobuf::uint32 value);
 
   // double TurnoverRate = 21;
   void clear_turnoverrate();
@@ -439,11 +467,35 @@ class depthmarketdata : public ::google::protobuf::Message /* @@protoc_insertion
   double p() const;
   void set_p(double value);
 
-  // int64 TradVol = 40;
+  // int32 TradVol = 40;
   void clear_tradvol();
   static const int kTradVolFieldNumber = 40;
-  ::google::protobuf::int64 tradvol() const;
-  void set_tradvol(::google::protobuf::int64 value);
+  ::google::protobuf::int32 tradvol() const;
+  void set_tradvol(::google::protobuf::int32 value);
+
+  // int32 field1 = 41;
+  void clear_field1();
+  static const int kField1FieldNumber = 41;
+  ::google::protobuf::int32 field1() const;
+  void set_field1(::google::protobuf::int32 value);
+
+  // double field3 = 43;
+  void clear_field3();
+  static const int kField3FieldNumber = 43;
+  double field3() const;
+  void set_field3(double value);
+
+  // double field4 = 44;
+  void clear_field4();
+  static const int kField4FieldNumber = 44;
+  double field4() const;
+  void set_field4(double value);
+
+  // int32 field2 = 42;
+  void clear_field2();
+  static const int kField2FieldNumber = 42;
+  ::google::protobuf::int32 field2() const;
+  void set_field2(::google::protobuf::int32 value);
 
   // @@protoc_insertion_point(class_scope:depthmarketdata)
  private:
@@ -462,6 +514,8 @@ class depthmarketdata : public ::google::protobuf::Message /* @@protoc_insertion
   ::google::protobuf::internal::ArenaStringPtr date_;
   ::google::protobuf::internal::ArenaStringPtr time_;
   ::google::protobuf::internal::ArenaStringPtr status_;
+  ::google::protobuf::internal::ArenaStringPtr field5_;
+  ::google::protobuf::internal::ArenaStringPtr field6_;
   ::google::protobuf::int64 ei_;
   double openprice_;
   double precloseprice_;
@@ -470,9 +524,9 @@ class depthmarketdata : public ::google::protobuf::Message /* @@protoc_insertion
   double lowprice_;
   double bidprice_;
   double askprice_;
-  ::google::protobuf::int64 volume_;
   double turnover_;
-  ::google::protobuf::int64 updtime_;
+  ::google::protobuf::uint32 volume_;
+  ::google::protobuf::uint32 updtime_;
   double turnoverrate_;
   double avpri_;
   double sa_;
@@ -492,7 +546,11 @@ class depthmarketdata : public ::google::protobuf::Message /* @@protoc_insertion
   double z_;
   double d_;
   double p_;
-  ::google::protobuf::int64 tradvol_;
+  ::google::protobuf::int32 tradvol_;
+  ::google::protobuf::int32 field1_;
+  double field3_;
+  double field4_;
+  ::google::protobuf::int32 field2_;
   mutable int _cached_size_;
   friend struct protobuf_depthmarketdata_2eproto::TableStruct;
 };
@@ -593,18 +651,18 @@ class clearsignal : public ::google::protobuf::Message /* @@protoc_insertion_poi
   ::std::string* release_tradingday();
   void set_allocated_tradingday(::std::string* tradingday);
 
-  // int64 update_time = 2;
+  // uint32 update_time = 2;
   void clear_update_time();
   static const int kUpdateTimeFieldNumber = 2;
-  ::google::protobuf::int64 update_time() const;
-  void set_update_time(::google::protobuf::int64 value);
+  ::google::protobuf::uint32 update_time() const;
+  void set_update_time(::google::protobuf::uint32 value);
 
   // @@protoc_insertion_point(class_scope:clearsignal)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::ArenaStringPtr tradingday_;
-  ::google::protobuf::int64 update_time_;
+  ::google::protobuf::uint32 update_time_;
   mutable int _cached_size_;
   friend struct protobuf_depthmarketdata_2eproto::TableStruct;
 };
@@ -691,17 +749,17 @@ class heartbeat : public ::google::protobuf::Message /* @@protoc_insertion_point
 
   // accessors -------------------------------------------------------
 
-  // int64 update_time = 1;
+  // uint32 update_time = 1;
   void clear_update_time();
   static const int kUpdateTimeFieldNumber = 1;
-  ::google::protobuf::int64 update_time() const;
-  void set_update_time(::google::protobuf::int64 value);
+  ::google::protobuf::uint32 update_time() const;
+  void set_update_time(::google::protobuf::uint32 value);
 
   // @@protoc_insertion_point(class_scope:heartbeat)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
-  ::google::protobuf::int64 update_time_;
+  ::google::protobuf::uint32 update_time_;
   mutable int _cached_size_;
   friend struct protobuf_depthmarketdata_2eproto::TableStruct;
 };
@@ -1075,15 +1133,15 @@ inline void depthmarketdata::set_askprice(double value) {
   // @@protoc_insertion_point(field_set:depthmarketdata.AskPrice)
 }
 
-// int64 Volume = 11;
+// uint32 Volume = 11;
 inline void depthmarketdata::clear_volume() {
-  volume_ = GOOGLE_LONGLONG(0);
+  volume_ = 0u;
 }
-inline ::google::protobuf::int64 depthmarketdata::volume() const {
+inline ::google::protobuf::uint32 depthmarketdata::volume() const {
   // @@protoc_insertion_point(field_get:depthmarketdata.Volume)
   return volume_;
 }
-inline void depthmarketdata::set_volume(::google::protobuf::int64 value) {
+inline void depthmarketdata::set_volume(::google::protobuf::uint32 value) {
   
   volume_ = value;
   // @@protoc_insertion_point(field_set:depthmarketdata.Volume)
@@ -1382,15 +1440,15 @@ inline void depthmarketdata::set_allocated_status(::std::string* status) {
   // @@protoc_insertion_point(field_set_allocated:depthmarketdata.Status)
 }
 
-// int64 UpdTime = 20;
+// uint32 UpdTime = 20;
 inline void depthmarketdata::clear_updtime() {
-  updtime_ = GOOGLE_LONGLONG(0);
+  updtime_ = 0u;
 }
-inline ::google::protobuf::int64 depthmarketdata::updtime() const {
+inline ::google::protobuf::uint32 depthmarketdata::updtime() const {
   // @@protoc_insertion_point(field_get:depthmarketdata.UpdTime)
   return updtime_;
 }
-inline void depthmarketdata::set_updtime(::google::protobuf::int64 value) {
+inline void depthmarketdata::set_updtime(::google::protobuf::uint32 value) {
   
   updtime_ = value;
   // @@protoc_insertion_point(field_set:depthmarketdata.UpdTime)
@@ -1662,18 +1720,180 @@ inline void depthmarketdata::set_p(double value) {
   // @@protoc_insertion_point(field_set:depthmarketdata.P)
 }
 
-// int64 TradVol = 40;
+// int32 TradVol = 40;
 inline void depthmarketdata::clear_tradvol() {
-  tradvol_ = GOOGLE_LONGLONG(0);
+  tradvol_ = 0;
 }
-inline ::google::protobuf::int64 depthmarketdata::tradvol() const {
+inline ::google::protobuf::int32 depthmarketdata::tradvol() const {
   // @@protoc_insertion_point(field_get:depthmarketdata.TradVol)
   return tradvol_;
 }
-inline void depthmarketdata::set_tradvol(::google::protobuf::int64 value) {
+inline void depthmarketdata::set_tradvol(::google::protobuf::int32 value) {
   
   tradvol_ = value;
   // @@protoc_insertion_point(field_set:depthmarketdata.TradVol)
+}
+
+// int32 field1 = 41;
+inline void depthmarketdata::clear_field1() {
+  field1_ = 0;
+}
+inline ::google::protobuf::int32 depthmarketdata::field1() const {
+  // @@protoc_insertion_point(field_get:depthmarketdata.field1)
+  return field1_;
+}
+inline void depthmarketdata::set_field1(::google::protobuf::int32 value) {
+  
+  field1_ = value;
+  // @@protoc_insertion_point(field_set:depthmarketdata.field1)
+}
+
+// int32 field2 = 42;
+inline void depthmarketdata::clear_field2() {
+  field2_ = 0;
+}
+inline ::google::protobuf::int32 depthmarketdata::field2() const {
+  // @@protoc_insertion_point(field_get:depthmarketdata.field2)
+  return field2_;
+}
+inline void depthmarketdata::set_field2(::google::protobuf::int32 value) {
+  
+  field2_ = value;
+  // @@protoc_insertion_point(field_set:depthmarketdata.field2)
+}
+
+// double field3 = 43;
+inline void depthmarketdata::clear_field3() {
+  field3_ = 0;
+}
+inline double depthmarketdata::field3() const {
+  // @@protoc_insertion_point(field_get:depthmarketdata.field3)
+  return field3_;
+}
+inline void depthmarketdata::set_field3(double value) {
+  
+  field3_ = value;
+  // @@protoc_insertion_point(field_set:depthmarketdata.field3)
+}
+
+// double field4 = 44;
+inline void depthmarketdata::clear_field4() {
+  field4_ = 0;
+}
+inline double depthmarketdata::field4() const {
+  // @@protoc_insertion_point(field_get:depthmarketdata.field4)
+  return field4_;
+}
+inline void depthmarketdata::set_field4(double value) {
+  
+  field4_ = value;
+  // @@protoc_insertion_point(field_set:depthmarketdata.field4)
+}
+
+// string field5 = 55;
+inline void depthmarketdata::clear_field5() {
+  field5_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& depthmarketdata::field5() const {
+  // @@protoc_insertion_point(field_get:depthmarketdata.field5)
+  return field5_.GetNoArena();
+}
+inline void depthmarketdata::set_field5(const ::std::string& value) {
+  
+  field5_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:depthmarketdata.field5)
+}
+#if LANG_CXX11
+inline void depthmarketdata::set_field5(::std::string&& value) {
+  
+  field5_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:depthmarketdata.field5)
+}
+#endif
+inline void depthmarketdata::set_field5(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  
+  field5_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:depthmarketdata.field5)
+}
+inline void depthmarketdata::set_field5(const char* value, size_t size) {
+  
+  field5_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:depthmarketdata.field5)
+}
+inline ::std::string* depthmarketdata::mutable_field5() {
+  
+  // @@protoc_insertion_point(field_mutable:depthmarketdata.field5)
+  return field5_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* depthmarketdata::release_field5() {
+  // @@protoc_insertion_point(field_release:depthmarketdata.field5)
+  
+  return field5_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void depthmarketdata::set_allocated_field5(::std::string* field5) {
+  if (field5 != NULL) {
+    
+  } else {
+    
+  }
+  field5_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), field5);
+  // @@protoc_insertion_point(field_set_allocated:depthmarketdata.field5)
+}
+
+// string field6 = 56;
+inline void depthmarketdata::clear_field6() {
+  field6_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& depthmarketdata::field6() const {
+  // @@protoc_insertion_point(field_get:depthmarketdata.field6)
+  return field6_.GetNoArena();
+}
+inline void depthmarketdata::set_field6(const ::std::string& value) {
+  
+  field6_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:depthmarketdata.field6)
+}
+#if LANG_CXX11
+inline void depthmarketdata::set_field6(::std::string&& value) {
+  
+  field6_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:depthmarketdata.field6)
+}
+#endif
+inline void depthmarketdata::set_field6(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  
+  field6_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:depthmarketdata.field6)
+}
+inline void depthmarketdata::set_field6(const char* value, size_t size) {
+  
+  field6_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:depthmarketdata.field6)
+}
+inline ::std::string* depthmarketdata::mutable_field6() {
+  
+  // @@protoc_insertion_point(field_mutable:depthmarketdata.field6)
+  return field6_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* depthmarketdata::release_field6() {
+  // @@protoc_insertion_point(field_release:depthmarketdata.field6)
+  
+  return field6_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void depthmarketdata::set_allocated_field6(::std::string* field6) {
+  if (field6 != NULL) {
+    
+  } else {
+    
+  }
+  field6_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), field6);
+  // @@protoc_insertion_point(field_set_allocated:depthmarketdata.field6)
 }
 
 // -------------------------------------------------------------------
@@ -1733,15 +1953,15 @@ inline void clearsignal::set_allocated_tradingday(::std::string* tradingday) {
   // @@protoc_insertion_point(field_set_allocated:clearsignal.tradingday)
 }
 
-// int64 update_time = 2;
+// uint32 update_time = 2;
 inline void clearsignal::clear_update_time() {
-  update_time_ = GOOGLE_LONGLONG(0);
+  update_time_ = 0u;
 }
-inline ::google::protobuf::int64 clearsignal::update_time() const {
+inline ::google::protobuf::uint32 clearsignal::update_time() const {
   // @@protoc_insertion_point(field_get:clearsignal.update_time)
   return update_time_;
 }
-inline void clearsignal::set_update_time(::google::protobuf::int64 value) {
+inline void clearsignal::set_update_time(::google::protobuf::uint32 value) {
   
   update_time_ = value;
   // @@protoc_insertion_point(field_set:clearsignal.update_time)
@@ -1751,15 +1971,15 @@ inline void clearsignal::set_update_time(::google::protobuf::int64 value) {
 
 // heartbeat
 
-// int64 update_time = 1;
+// uint32 update_time = 1;
 inline void heartbeat::clear_update_time() {
-  update_time_ = GOOGLE_LONGLONG(0);
+  update_time_ = 0u;
 }
-inline ::google::protobuf::int64 heartbeat::update_time() const {
+inline ::google::protobuf::uint32 heartbeat::update_time() const {
   // @@protoc_insertion_point(field_get:heartbeat.update_time)
   return update_time_;
 }
-inline void heartbeat::set_update_time(::google::protobuf::int64 value) {
+inline void heartbeat::set_update_time(::google::protobuf::uint32 value) {
   
   update_time_ = value;
   // @@protoc_insertion_point(field_set:heartbeat.update_time)

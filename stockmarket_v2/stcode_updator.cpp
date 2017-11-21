@@ -188,7 +188,7 @@ std::unordered_map<std::string, tick_info>* stcode_updator::get_securitycode_map
 
         
 
-        sql::ResultSet* res = m_stcode.query("select * from t_stcode_hk WHERE EnableSubMarket !=0 and Status != 0 and (SecurityType = 'I' or SecurityType = 'A')");
+        sql::ResultSet* res = m_stcode.query("select * from t_stcode WHERE EnableSubMarket !=0 and Status != 0 and (SecurityType = 'I' or SecurityType = 'A')");
         while (res && res->next()) {
             tick_info tick_info_;
             tick_info_.ei = res->getInt64("ID");

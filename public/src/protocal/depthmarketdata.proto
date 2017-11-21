@@ -14,9 +14,9 @@ message depthmarketdata {
     uint32   Volume = 11;
     double  Turnover = 12;
     repeated    double  BP = 13;
-    repeated    int64   BV = 14;
+    repeated    uint32   BV = 14;
     repeated    double  SP = 15;
-    repeated    int64   SV = 16;
+    repeated    uint32   SV = 16;
     string  Date = 17;
     string  Time = 18;
     string  Status = 19;

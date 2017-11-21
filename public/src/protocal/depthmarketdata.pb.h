@@ -153,16 +153,16 @@ class depthmarketdata : public ::google::protobuf::Message /* @@protoc_insertion
   ::google::protobuf::RepeatedField< double >*
       mutable_bp();
 
-  // repeated int64 BV = 14;
+  // repeated uint32 BV = 14;
   int bv_size() const;
   void clear_bv();
   static const int kBVFieldNumber = 14;
-  ::google::protobuf::int64 bv(int index) const;
-  void set_bv(int index, ::google::protobuf::int64 value);
-  void add_bv(::google::protobuf::int64 value);
-  const ::google::protobuf::RepeatedField< ::google::protobuf::int64 >&
+  ::google::protobuf::uint32 bv(int index) const;
+  void set_bv(int index, ::google::protobuf::uint32 value);
+  void add_bv(::google::protobuf::uint32 value);
+  const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
       bv() const;
-  ::google::protobuf::RepeatedField< ::google::protobuf::int64 >*
+  ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
       mutable_bv();
 
   // repeated double SP = 15;
@@ -177,16 +177,16 @@ class depthmarketdata : public ::google::protobuf::Message /* @@protoc_insertion
   ::google::protobuf::RepeatedField< double >*
       mutable_sp();
 
-  // repeated int64 SV = 16;
+  // repeated uint32 SV = 16;
   int sv_size() const;
   void clear_sv();
   static const int kSVFieldNumber = 16;
-  ::google::protobuf::int64 sv(int index) const;
-  void set_sv(int index, ::google::protobuf::int64 value);
-  void add_sv(::google::protobuf::int64 value);
-  const ::google::protobuf::RepeatedField< ::google::protobuf::int64 >&
+  ::google::protobuf::uint32 sv(int index) const;
+  void set_sv(int index, ::google::protobuf::uint32 value);
+  void add_sv(::google::protobuf::uint32 value);
+  const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
       sv() const;
-  ::google::protobuf::RepeatedField< ::google::protobuf::int64 >*
+  ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
       mutable_sv();
 
   // string SecurityCode = 2;
@@ -503,11 +503,11 @@ class depthmarketdata : public ::google::protobuf::Message /* @@protoc_insertion
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::RepeatedField< double > bp_;
   mutable int _bp_cached_byte_size_;
-  ::google::protobuf::RepeatedField< ::google::protobuf::int64 > bv_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::uint32 > bv_;
   mutable int _bv_cached_byte_size_;
   ::google::protobuf::RepeatedField< double > sp_;
   mutable int _sp_cached_byte_size_;
-  ::google::protobuf::RepeatedField< ::google::protobuf::int64 > sv_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::uint32 > sv_;
   mutable int _sv_cached_byte_size_;
   ::google::protobuf::internal::ArenaStringPtr securitycode_;
   ::google::protobuf::internal::ArenaStringPtr securityname_;
@@ -1191,31 +1191,31 @@ depthmarketdata::mutable_bp() {
   return &bp_;
 }
 
-// repeated int64 BV = 14;
+// repeated uint32 BV = 14;
 inline int depthmarketdata::bv_size() const {
   return bv_.size();
 }
 inline void depthmarketdata::clear_bv() {
   bv_.Clear();
 }
-inline ::google::protobuf::int64 depthmarketdata::bv(int index) const {
+inline ::google::protobuf::uint32 depthmarketdata::bv(int index) const {
   // @@protoc_insertion_point(field_get:depthmarketdata.BV)
   return bv_.Get(index);
 }
-inline void depthmarketdata::set_bv(int index, ::google::protobuf::int64 value) {
+inline void depthmarketdata::set_bv(int index, ::google::protobuf::uint32 value) {
   bv_.Set(index, value);
   // @@protoc_insertion_point(field_set:depthmarketdata.BV)
 }
-inline void depthmarketdata::add_bv(::google::protobuf::int64 value) {
+inline void depthmarketdata::add_bv(::google::protobuf::uint32 value) {
   bv_.Add(value);
   // @@protoc_insertion_point(field_add:depthmarketdata.BV)
 }
-inline const ::google::protobuf::RepeatedField< ::google::protobuf::int64 >&
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
 depthmarketdata::bv() const {
   // @@protoc_insertion_point(field_list:depthmarketdata.BV)
   return bv_;
 }
-inline ::google::protobuf::RepeatedField< ::google::protobuf::int64 >*
+inline ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
 depthmarketdata::mutable_bv() {
   // @@protoc_insertion_point(field_mutable_list:depthmarketdata.BV)
   return &bv_;
@@ -1251,31 +1251,31 @@ depthmarketdata::mutable_sp() {
   return &sp_;
 }
 
-// repeated int64 SV = 16;
+// repeated uint32 SV = 16;
 inline int depthmarketdata::sv_size() const {
   return sv_.size();
 }
 inline void depthmarketdata::clear_sv() {
   sv_.Clear();
 }
-inline ::google::protobuf::int64 depthmarketdata::sv(int index) const {
+inline ::google::protobuf::uint32 depthmarketdata::sv(int index) const {
   // @@protoc_insertion_point(field_get:depthmarketdata.SV)
   return sv_.Get(index);
 }
-inline void depthmarketdata::set_sv(int index, ::google::protobuf::int64 value) {
+inline void depthmarketdata::set_sv(int index, ::google::protobuf::uint32 value) {
   sv_.Set(index, value);
   // @@protoc_insertion_point(field_set:depthmarketdata.SV)
 }
-inline void depthmarketdata::add_sv(::google::protobuf::int64 value) {
+inline void depthmarketdata::add_sv(::google::protobuf::uint32 value) {
   sv_.Add(value);
   // @@protoc_insertion_point(field_add:depthmarketdata.SV)
 }
-inline const ::google::protobuf::RepeatedField< ::google::protobuf::int64 >&
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
 depthmarketdata::sv() const {
   // @@protoc_insertion_point(field_list:depthmarketdata.SV)
   return sv_;
 }
-inline ::google::protobuf::RepeatedField< ::google::protobuf::int64 >*
+inline ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
 depthmarketdata::mutable_sv() {
   // @@protoc_insertion_point(field_mutable_list:depthmarketdata.SV)
   return &sv_;

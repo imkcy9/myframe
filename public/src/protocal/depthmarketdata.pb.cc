@@ -212,7 +212,7 @@ void AddDescriptorsImpl() {
       "\022\021\n\tHighPrice\030\007 \001(\001\022\020\n\010LowPrice\030\010 \001(\001\022\020\n"
       "\010BidPrice\030\t \001(\001\022\020\n\010AskPrice\030\n \001(\001\022\016\n\006Vol"
       "ume\030\013 \001(\r\022\020\n\010Turnover\030\014 \001(\001\022\n\n\002BP\030\r \003(\001\022"
-      "\n\n\002BV\030\016 \003(\003\022\n\n\002SP\030\017 \003(\001\022\n\n\002SV\030\020 \003(\003\022\014\n\004D"
+      "\n\n\002BV\030\016 \003(\r\022\n\n\002SP\030\017 \003(\001\022\n\n\002SV\030\020 \003(\r\022\014\n\004D"
       "ate\030\021 \001(\t\022\014\n\004Time\030\022 \001(\t\022\016\n\006Status\030\023 \001(\t\022"
       "\017\n\007UpdTime\030\024 \001(\r\022\024\n\014TurnoverRate\030\025 \001(\001\022\r"
       "\n\005AvPri\030\026 \001(\001\022\n\n\002SA\030\027 \001(\001\022\017\n\007LimitUp\030\030 \001"
@@ -631,18 +631,18 @@ bool depthmarketdata::MergePartialFromCodedStream(
         break;
       }
 
-      // repeated int64 BV = 14;
+      // repeated uint32 BV = 14;
       case 14: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(114u /* 114 & 0xFF */)) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitive<
-                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
                  input, this->mutable_bv())));
         } else if (
             static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(112u /* 112 & 0xFF */)) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitiveNoInline<
-                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
                  1, 114u, input, this->mutable_bv())));
         } else {
           goto handle_unusual;
@@ -669,18 +669,18 @@ bool depthmarketdata::MergePartialFromCodedStream(
         break;
       }
 
-      // repeated int64 SV = 16;
+      // repeated uint32 SV = 16;
       case 16: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(130u /* 130 & 0xFF */)) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitive<
-                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
                  input, this->mutable_sv())));
         } else if (
             static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(128u /* 128 & 0xFF */)) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitiveNoInline<
-                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
                  2, 130u, input, this->mutable_sv())));
         } else {
           goto handle_unusual;
@@ -1223,14 +1223,14 @@ void depthmarketdata::SerializeWithCachedSizes(
       this->bp().data(), this->bp_size(), output);
   }
 
-  // repeated int64 BV = 14;
+  // repeated uint32 BV = 14;
   if (this->bv_size() > 0) {
     ::google::protobuf::internal::WireFormatLite::WriteTag(14, ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED, output);
     output->WriteVarint32(static_cast< ::google::protobuf::uint32>(
         _bv_cached_byte_size_));
   }
   for (int i = 0, n = this->bv_size(); i < n; i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt64NoTag(
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32NoTag(
       this->bv(i), output);
   }
 
@@ -1243,14 +1243,14 @@ void depthmarketdata::SerializeWithCachedSizes(
       this->sp().data(), this->sp_size(), output);
   }
 
-  // repeated int64 SV = 16;
+  // repeated uint32 SV = 16;
   if (this->sv_size() > 0) {
     ::google::protobuf::internal::WireFormatLite::WriteTag(16, ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED, output);
     output->WriteVarint32(static_cast< ::google::protobuf::uint32>(
         _sv_cached_byte_size_));
   }
   for (int i = 0, n = this->sv_size(); i < n; i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt64NoTag(
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32NoTag(
       this->sv(i), output);
   }
 
@@ -1528,7 +1528,7 @@ void depthmarketdata::SerializeWithCachedSizes(
       WriteDoubleNoTagToArray(this->bp_, target);
   }
 
-  // repeated int64 BV = 14;
+  // repeated uint32 BV = 14;
   if (this->bv_size() > 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteTagToArray(
       14,
@@ -1538,7 +1538,7 @@ void depthmarketdata::SerializeWithCachedSizes(
         static_cast< ::google::protobuf::uint32>(
             _bv_cached_byte_size_), target);
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteInt64NoTagToArray(this->bv_, target);
+      WriteUInt32NoTagToArray(this->bv_, target);
   }
 
   // repeated double SP = 15;
@@ -1554,7 +1554,7 @@ void depthmarketdata::SerializeWithCachedSizes(
       WriteDoubleNoTagToArray(this->sp_, target);
   }
 
-  // repeated int64 SV = 16;
+  // repeated uint32 SV = 16;
   if (this->sv_size() > 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteTagToArray(
       16,
@@ -1564,7 +1564,7 @@ void depthmarketdata::SerializeWithCachedSizes(
         static_cast< ::google::protobuf::uint32>(
             _sv_cached_byte_size_), target);
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteInt64NoTagToArray(this->sv_, target);
+      WriteUInt32NoTagToArray(this->sv_, target);
   }
 
   // string Date = 17;
@@ -1780,10 +1780,10 @@ size_t depthmarketdata::ByteSizeLong() const {
     total_size += data_size;
   }
 
-  // repeated int64 BV = 14;
+  // repeated uint32 BV = 14;
   {
     size_t data_size = ::google::protobuf::internal::WireFormatLite::
-      Int64Size(this->bv_);
+      UInt32Size(this->bv_);
     if (data_size > 0) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
@@ -1812,10 +1812,10 @@ size_t depthmarketdata::ByteSizeLong() const {
     total_size += data_size;
   }
 
-  // repeated int64 SV = 16;
+  // repeated uint32 SV = 16;
   {
     size_t data_size = ::google::protobuf::internal::WireFormatLite::
-      Int64Size(this->sv_);
+      UInt32Size(this->sv_);
     if (data_size > 0) {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
@@ -2590,31 +2590,31 @@ depthmarketdata::mutable_bp() {
   return &bp_;
 }
 
-// repeated int64 BV = 14;
+// repeated uint32 BV = 14;
 int depthmarketdata::bv_size() const {
   return bv_.size();
 }
 void depthmarketdata::clear_bv() {
   bv_.Clear();
 }
-::google::protobuf::int64 depthmarketdata::bv(int index) const {
+::google::protobuf::uint32 depthmarketdata::bv(int index) const {
   // @@protoc_insertion_point(field_get:depthmarketdata.BV)
   return bv_.Get(index);
 }
-void depthmarketdata::set_bv(int index, ::google::protobuf::int64 value) {
+void depthmarketdata::set_bv(int index, ::google::protobuf::uint32 value) {
   bv_.Set(index, value);
   // @@protoc_insertion_point(field_set:depthmarketdata.BV)
 }
-void depthmarketdata::add_bv(::google::protobuf::int64 value) {
+void depthmarketdata::add_bv(::google::protobuf::uint32 value) {
   bv_.Add(value);
   // @@protoc_insertion_point(field_add:depthmarketdata.BV)
 }
-const ::google::protobuf::RepeatedField< ::google::protobuf::int64 >&
+const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
 depthmarketdata::bv() const {
   // @@protoc_insertion_point(field_list:depthmarketdata.BV)
   return bv_;
 }
-::google::protobuf::RepeatedField< ::google::protobuf::int64 >*
+::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
 depthmarketdata::mutable_bv() {
   // @@protoc_insertion_point(field_mutable_list:depthmarketdata.BV)
   return &bv_;
@@ -2650,31 +2650,31 @@ depthmarketdata::mutable_sp() {
   return &sp_;
 }
 
-// repeated int64 SV = 16;
+// repeated uint32 SV = 16;
 int depthmarketdata::sv_size() const {
   return sv_.size();
 }
 void depthmarketdata::clear_sv() {
   sv_.Clear();
 }
-::google::protobuf::int64 depthmarketdata::sv(int index) const {
+::google::protobuf::uint32 depthmarketdata::sv(int index) const {
   // @@protoc_insertion_point(field_get:depthmarketdata.SV)
   return sv_.Get(index);
 }
-void depthmarketdata::set_sv(int index, ::google::protobuf::int64 value) {
+void depthmarketdata::set_sv(int index, ::google::protobuf::uint32 value) {
   sv_.Set(index, value);
   // @@protoc_insertion_point(field_set:depthmarketdata.SV)
 }
-void depthmarketdata::add_sv(::google::protobuf::int64 value) {
+void depthmarketdata::add_sv(::google::protobuf::uint32 value) {
   sv_.Add(value);
   // @@protoc_insertion_point(field_add:depthmarketdata.SV)
 }
-const ::google::protobuf::RepeatedField< ::google::protobuf::int64 >&
+const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
 depthmarketdata::sv() const {
   // @@protoc_insertion_point(field_list:depthmarketdata.SV)
   return sv_;
 }
-::google::protobuf::RepeatedField< ::google::protobuf::int64 >*
+::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
 depthmarketdata::mutable_sv() {
   // @@protoc_insertion_point(field_mutable_list:depthmarketdata.SV)
   return &sv_;

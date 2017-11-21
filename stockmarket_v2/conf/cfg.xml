@@ -18,7 +18,7 @@
     -->
     <mdconfig 
         bind_addr="tcp://0.0.0.0:58005"  
-        connect_addr="ws://hq.sinajs.cn/wskt?list=rt_" 
+        connect_addr="ws://hq.sinajs.cn/wskt?list=" 
         is_storage="true"
         storage_path="../flow/"  
         clear_signal_time="09:05:00"

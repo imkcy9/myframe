@@ -25,8 +25,8 @@ public:
 
     void zmq_timer_event(int id_) override;
 
-    int on_recv_tick(ushort cmd, void *body, size_t body_size);
-    int on_recv_hb(ushort cmd, void *body, size_t body_size);
+    int on_recv_tick(ushort cmd, zmq::message_t& msg, zmq::message_t& rid);
+    int on_recv_hb(ushort cmd, zmq::message_t& msg, zmq::message_t& rid);
 private:
     enum timer_id {
         timer_test = 0,

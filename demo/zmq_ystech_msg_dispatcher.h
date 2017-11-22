@@ -20,7 +20,7 @@
 template<class T>
 class zmq_ystech_msg_dispatcher : public zmq_poll_events {
 protected:
-    typedef int (T:: *msg_func) (ushort cmd, void *body, size_t body_size);
+    typedef int (T:: *msg_func) (ushort cmd, zmq::message_t& msg, zmq::message_t& rid);
     void add_message_mapping(ushort cmd, msg_func func) {
         m_cmdmapping[cmd] = func;
     }
@@ -44,7 +44,7 @@ public:
         typename std::unordered_map<ushort,msg_func>::iterator it = m_cmdmapping.find(ucmd);
         if(it != m_cmdmapping.end() && it->second) {
             //next = it->second;
-            (static_cast <T *> (this)->*it->second)(ucmd, body.data(), body.size());
+            (static_cast <T *> (this)->*it->second)(ucmd, body, routingid);
         }
     };
     

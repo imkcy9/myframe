@@ -63,16 +63,16 @@ void update_thread::zmq_timer_event(int id_) {
     }
     if(id_ == timer_test3) {
         LOG_INFO("timer_test3, stop thread");
-        this->stop();
+        //this->stop();
     }
 }
 
-int update_thread::on_recv_tick(ushort cmd, void *body, size_t body_size) {
-    LOG_INFO("{}, {}",cmd,(char*)body);
+int update_thread::on_recv_tick(ushort cmd, zmq::message_t& msg, zmq::message_t& rid) {
+    LOG_INFO("cmd {}, sid {} \n, {}",cmd,msg.get_sid(), (char*)msg.data());
     return 0;
 }
 
-int update_thread::on_recv_hb(ushort cmd, void* body, size_t body_size) {
-    LOG_INFO("{}, {}",cmd,(char*)body);
+int update_thread::on_recv_hb(ushort cmd, zmq::message_t& msg, zmq::message_t& rid) {
+    LOG_INFO("收到心跳  {}, {}",cmd,(char*)msg.data());
     return 0;
 }

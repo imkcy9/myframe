@@ -17,9 +17,9 @@
 #include "log.h"
 
 update_thread::update_thread(zmq::context_t* ctx)
-:m_sock(*ctx,ZMQ_YSSTREAM)
+:m_sock(*ctx,ZMQ_STREAM)
  {
-    add_message_mapping(1005,&update_thread::on_recv_tick);
+    add_message_mapping(1007,&update_thread::on_recv_tick);
     add_message_mapping(1004,&update_thread::on_recv_hb);
 }
 
@@ -28,12 +28,12 @@ update_thread::~update_thread() {
 }
 
 bool update_thread::init() {
-    timers_add(timer_test, 1 * 1000, this);
-    timers_add(timer_test2, 2 * 1000, this);
-    timers_add(timer_test3, 10 * 1000, this);
+    //timers_add(timer_test, 1 * 1000, this);
+    //timers_add(timer_test2, 2 * 1000, this);
+    //timers_add(timer_test3, 10 * 1000, this);
     
     m_sock.setsockopt(ZMQ_CONNECT_RID,"server",6);
-    m_sock.connect("tcp://192.168.19.192:59000");
+    m_sock.bind("tcp://*:2018");
     add_socket(&m_sock,this);
     return true;
 }
@@ -63,7 +63,7 @@ void update_thread::zmq_timer_event(int id_) {
     }
     if(id_ == timer_test3) {
         LOG_INFO("timer_test3, stop thread");
-        //this->stop();
+        this->stop();
     }
 }
 

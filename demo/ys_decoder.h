@@ -38,7 +38,8 @@ private:
     int head_ready (unsigned char const*);
     int bodyready (unsigned char const*);
 
-    int size_ready(uint64_t size_, unsigned char const*);
+    int dyna_buffer_ready(unsigned char const*);
+    int dyna_buffer_not_ready(unsigned char const*);
 
     NtPkgHead headbuf;
     unsigned char msg_flags;
@@ -46,6 +47,8 @@ private:
 
     const int64_t maxmsgsize;
     uint16_t cmd;
+
+    std::string dyna_buffer;
 };
 
 

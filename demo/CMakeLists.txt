@@ -19,13 +19,15 @@ INCLUDE_DIRECTORIES(
         ../public/src/
 	../public/src/timer
 	../public/include/mysql-connector
+	/usr/local/include
 )
 
 LINK_DIRECTORIES(
+	/usr/local/lib
 	../public/lib/ubuntu
 	../../public/lib/ubuntu
 )
 
-ADD_EXECUTABLE(demo ${SRC_LIST})
+ADD_EXECUTABLE(demo ${SRC_LIST} ys_decoder.cpp ys_decoder.h decoder_base.h zmq_ystech_msg_dispatcher.h)
 
-TARGET_LINK_LIBRARIES(demo pthread tinyxml2 curl zmq uWS ssl protobuf mysqlcppconn-static dl)
+TARGET_LINK_LIBRARIES(demo pthread tinyxml2 curl zmq uWS protobuf mysqlcppconn-static dl)

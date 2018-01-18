@@ -15,11 +15,12 @@
 
 #include "update_thread.h"
 #include "log.h"
+#include <iostream>
 
 update_thread::update_thread(zmq::context_t* ctx)
 :m_sock(*ctx,ZMQ_STREAM)
  {
-    add_message_mapping(1007,&update_thread::on_recv_tick);
+    add_message_mapping(1005,&update_thread::on_recv_tick);
     add_message_mapping(1004,&update_thread::on_recv_hb);
 }
 
@@ -28,12 +29,12 @@ update_thread::~update_thread() {
 }
 
 bool update_thread::init() {
-    //timers_add(timer_test, 1 * 1000, this);
+    timers_add(timer_test, 1 * 1000, this);
     //timers_add(timer_test2, 2 * 1000, this);
     //timers_add(timer_test3, 10 * 1000, this);
     
     m_sock.setsockopt(ZMQ_CONNECT_RID,"server",6);
-    m_sock.bind("tcp://*:2018");
+    m_sock.connect("tcp://192.168.19.193:59005");
     add_socket(&m_sock,this);
     return true;
 }
@@ -53,8 +54,13 @@ void update_thread::zmq_timer_event(int id_) {
         LOG_INFO("send hb");
         ushort cmd = 1004;
         m_sock.send("server",6,ZMQ_SNDMORE);
-        m_sock.send(&cmd,sizeof(cmd),ZMQ_SNDMORE);
-        m_sock.send("4",2);
+        NtPkgHead head;
+        memset(&head,0,sizeof(NtPkgHead));
+        head.wCmd = htons(1004);
+        head.bStartFlag = 255;
+        head.wLen = htons(20);
+        //m_sock.send(&cmd,sizeof(cmd),ZMQ_SNDMORE);
+        m_sock.send(&head,20);
         //timers_cancel(timer_test,this);
         
     }
@@ -68,7 +74,8 @@ void update_thread::zmq_timer_event(int id_) {
 }
 
 int update_thread::on_recv_tick(ushort cmd, zmq::message_t& msg, zmq::message_t& rid) {
-    LOG_INFO("cmd {}, sid {} \n, {}",cmd,msg.get_sid(), (char*)msg.data());
+    //std::cout << std::string((char*)msg.data(),msg.size()) << std::endl;
+    LOG_INFO("cmd {}, sid {} , msg size {}, \ntick, {}",cmd,msg.get_sid(), msg.size(), std::string((char*)msg.data(),msg.size()));
     return 0;
 }
 

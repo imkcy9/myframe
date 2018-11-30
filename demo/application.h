@@ -59,8 +59,11 @@ application<PROCESS>::application()
 template<class PROCESS>
 application<PROCESS>::~application() {
     if(m_ctx) {
+        //LOG_INFO("m_ctx->close();");
         m_ctx->close();
+        //LOG_INFO("m_ctx->close();");
 	delete m_ctx;
+        //LOG_INFO("delete m_ctx;");
     }
 }
 
@@ -165,7 +168,9 @@ bool application<PROCESS>::init_config() {
 template<class PROCESS>
 void application<PROCESS>::stop() {
     if(m_process) {
+        LOG_INFO("m_process->stop();");
         m_process->stop();
+         
     }
 }
 

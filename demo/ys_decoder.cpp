@@ -3,6 +3,13 @@
 //
 
 #include "ys_decoder.h"
+#include <netinet/in.h>
+
+ys_decoder::ys_decoder()
+:ys_decoder(8196,8196)
+{
+
+}
 
 ys_decoder::ys_decoder(size_t bufsize_, int64_t maxmsgsize_)
 : maxmsgsize(maxmsgsize_)

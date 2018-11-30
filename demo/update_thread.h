@@ -14,9 +14,13 @@
 #ifndef UPDATE_THREAD_H
 #define UPDATE_THREAD_H
 #include "zmq_poller_reactor.h"
-#include "zmq_ystech_msg_dispatcher.h"
+#include "ys_decoder.h"
+#include "src/sdoff/sdoff_decoder.h"
+#include "orcfix_msg_dispatcher.h"
+#include "src/service/md_service.h"
 
-class update_thread : public zmq_ystech_msg_dispatcher<update_thread>, public zmq_poller_reactor {
+namespace kt {
+class update_thread : public orcfix_msg_dispatcher, public zmq_poller_reactor {
 public:
     update_thread(zmq::context_t* ctx);
     virtual ~update_thread();
@@ -25,8 +29,10 @@ public:
 
     void zmq_timer_event(int id_) override;
 
-    int on_recv_tick(ushort cmd, zmq::message_t& msg, zmq::message_t& rid);
-    int on_recv_hb(ushort cmd, zmq::message_t& msg, zmq::message_t& rid);
+    void on_recv_sd_message(kt::sd_message_t* sd_message_, kt::user& user_) override;
+    
+    void on_disconnect(kt::user user_) override;
+
 private:
     enum timer_id {
         timer_test = 0,
@@ -38,7 +44,9 @@ private:
     void before_end() override;
 
     zmq::socket_t m_sock;
+    
+    md_service* _md_service;
 };
-
+}
 #endif /* UPDATE_THREAD_H */
 

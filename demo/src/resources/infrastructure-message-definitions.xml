@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<service-definitions xmlns="http://www.orcsoftware.com/service-definitions"
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <namespace name="fix" value="0">
+    <fields>
+      <field name="Text" tag="fix.fields.58"   type="string"/>
+      <field name="MessageEncoding" tag="fix.fields.347" type="string" />
+      <field name="Username" tag="fix.fields.553" type="string" comment="Userid or username. : is prohibited character and * is a special character"/>
+      <!-- Start V1 -->
+      <field name="Password" tag="fix.fields.554" type="string" />
+      <!-- End V1 -->
+    </fields>
+  </namespace>
+
+  <namespace name="orc" value="5000">
+    <fields>
+      <field name="RequestId"            tag="orc.fields.68"  type="int64"  comment="Identifier of request must be unique in session"/>
+      <field name="MessageTypeId"        tag="orc.fields.34"  type="uint32" comment="Unsigned integer identifier (calculated from tag attribute) of any message defined in SD" />
+      <field name="RefMessageTypeId"     tag="orc.fields.71"  type="uint32" comment="Unsigned integer identifier (calculated from tag attribute) of any message defined in SD" />
+      <field name="ServiceTypeId"        tag="orc.fields.35"  type="uint32" comment="Unsigned integer identifier (calculated from tag attribute) of service defined in SD"/>
+      <field name="ServiceOperationId"   tag="orc.fields.36"  type="uint32" comment="Unsigned integer identifier (calculated from id attribute) of service operation defined in SD"/>
+      <field name="RejectReason"         tag="orc.fields.37"  type="RejectReasonEnum"/>
+      <field name="OrderBookId"          tag="orc.fields.42"  type="string"  comment="Market gateway-provided unique OrderBook ID"/>
+      <field name="Group"                tag="orc.fields.47"  type="string"  comment="Each user connected SD enabled app has Group field. : is a prohibited character and * is a special character"/>
+
+      <!-- Start V1 -->
+      <field name="Originator"           tag="orc.fields.48"  type="string"  comment="Order originator"/>
+      <!-- End V1 -->
+
+      <field name="Reason"               tag="orc.fields.54" type="string"/>
+
+      <field name="ServiceVersion"       tag="orc.fields.21"  type="string"/>
+      <field name="ServiceImplVersion"   tag="orc.fields.17"    type="string"
+             comment="Version of the service implementation Major.Minor. Major changes when service implementation requires new fields to be sent"/>
+      <field name="ApplicationVersion"   tag="orc.fields.18"    type="string"
+             comment="Application specific version updated as soon as there are changes. On the format release.change-number-for-release."/>
+      <field name="ApplicationName"      tag="orc.fields.29"    type="string" comment="Application name e.g. Orc Trader or Eurex ETS"/>
+      <field name="LoginData"            tag="orc.fields.26"   type="LoginData"/>
+      <field name="SeverityLevel"        tag="orc.fields.28"   type="SeverityLevelEnum"/>
+	  <field name="AuthenticationType"   tag="orc.fields.251"   type="AuthenticationTypeEnum"/>
+	  <field name="SignatureChallenge"   tag="orc.fields.250"  type="string"/>
+	  <field name="AuthenticationResponse"  tag="orc.fields.253"  type="octets" />
+      <field name="TransactionId"        tag="orc.fields.25"   type="uint64"/>
+      <field name="InTimestamp"          tag="orc.fields.5"   type="uint64" comment="Timestamp in nanoseconds since 1970-01-01 UTC"/>
+      <field name="OutTimestamp"         tag="orc.fields.10"   type="uint64" comment="Timestamp in nanoseconds since 1970-01-01 UTC"/>
+      <field name="Capabilities"         tag="orc.fields.90"   type="string"
+          comment="Describes the capabilities of the service in a service-specific xml document."/>
+      <field name="ClientPriority"       tag="orc.fields.84"   type="uint32" comment="Client requested priority. Highest priority is 1 for Liquidator"/>
+    </fields>
+
+    <messages>
+      <request name="BaseRequest" tag="orc.messages.62"><!-- '>' -->
+        <group name="Header" />
+      </request>
+      <response name="BaseResponse" tag="orc.messages.60"><!-- '<' -->
+        <group name="Header" />
+        <field name="RejectReason" />
+        <field name="Reason" />
+      </response>
+      <feed name="BaseFeed" tag="orc.messages.96"><!-- '`' -->
+         <group name="Header" />
+         <field name="Reason" />
+      </feed>
+      <request name="LoginRequest" extends="orc.BaseRequest" tag="orc.messages.65"><!-- 'A' -->
+        <field name="ServiceVersion" required="true"/>
+        <field name="ServiceImplVersion" />
+        <field name="ApplicationName" comment="Sender application name"/>
+        <field name="ApplicationVersion" />
+        <field name="Username"/>
+        <field name="Group"/>
+        <field name="LoginData"/>
+        <field name="ClientPriority"/>
+		<field name="AuthenticationType"/>
+      </request>
+      <response name="LoginResponse" extends="orc.BaseResponse" tag="orc.messages.97"><!-- 'a' -->
+        <field name="ServiceVersion" required="true"/>
+        <field name="ServiceImplVersion" />
+        <field name="ApplicationName" comment="Sender application name"/>
+        <field name="ApplicationVersion" />
+        <field name="MessageEncoding" comment="Message encoding used by target exchange"/>
+        <field name="Capabilities"/>
+		<field name="AuthenticationType"/>
+		<field name="LoginData"/>
+      </response>
+      <request name="LogoutRequest" extends="orc.BaseRequest" tag="orc.messages.66"/><!-- 'B' -->
+      <response name="LogoutResponse" extends="orc.BaseResponse" tag="orc.messages.98"/><!-- 'b' -->
+
+      <feed name="NotificationFeed"  extends="orc.BaseFeed" tag="orc.messages.33" comment="This message can be sent to client to propagate any information. If this feed is a result of Request which does not have Response the corresponding servicetypeid, operationid and requestid should be set "><!-- '!' -->
+         <field name="Text"             comment="The notification body"/>
+         <field name="SeverityLevel"    comment="Enum describing severity level of notification (Info/Error/Warning/Debug)"/>
+         <field name="RefMessageTypeId" comment="Type of message being referenced (if applicable)" />
+         <field name="OrderBookId"      comment="Set if notification relates to particular instrument" />
+      </feed>
+
+    </messages>
+
+    <types>
+      <enums>
+        <enum name="RejectReasonEnum" tag="orc.types.21" type="int32">
+          <value name="Success"                  value="0"/>
+          <value name="Error"                    value="1"/>
+          <value name="BidSideRejectedError"     value="2"/>
+          <value name="OfferSideRejectedError"   value="3"/>
+          <value name="TransientError"			 value="4" comment="Aka 'Temporary Error'"/>
+        </enum>
+        <enum name="SeverityLevelEnum" tag="orc.types.20" type="int32">
+          <value name="Info" value="0"/>
+          <value name="Error" value="1"/>
+          <value name="Warning" value="2"/>
+          <value name="Debug" value="3"/>
+        </enum>
+		
+		<enum name="AuthenticationTypeEnum" tag="orc.types.91" type="int32">
+          <value name="ChallengeResponse" value="1"/>
+        </enum>
+      </enums>
+
+      <structs>
+		  <struct name="LoginData" tag="orc.types.92">
+		  	  <field name="SignatureChallenge"/>
+			  <field name="AuthenticationResponse" comment="Hash for authentication"/>	 
+          </struct>
+	
+        <group name="Header">
+          <field name="RequestId" />
+          <field name="ServiceTypeId" />
+          <field name="ServiceOperationId" />
+          <field name="TransactionId" />
+          <field name="InTimestamp" />
+          <field name="OutTimestamp" />
+        </group>
+
+      </structs>
+
+    </types>
+
+  </namespace>
+
+</service-definitions>

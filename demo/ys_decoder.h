@@ -26,6 +26,7 @@ struct NtPkgHead {
 
 class ys_decoder : public decoder_base<ys_decoder> {
 public:
+    ys_decoder();
     ys_decoder (size_t bufsize_, int64_t maxmsgsize_);
     virtual ~ys_decoder ();
 

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<service-definitions xmlns="http://www.orcsoftware.com/service-definitions"
+                     xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns:util="http://www.orcsoftware.com/xmlutil.jar">
+   <namespace name="marketspecific" value="8000">
+      <fields>
+       <!-- SOLA SAIL specific -->
+         <field name="HedgeSpec"             tag="marketspecific.fields.1" type="HedgeSpecEnum"/>
+       <!-- LIFFE UTP specific -->
+         <field name="LastPxOffMarket"       tag="marketspecific.fields.2" type="real64"/>
+         <field name="SettlPriceDesc"        tag="marketspecific.fields.3" type="string"/>
+         <field name="QuoteSpreadMultiplier" tag="marketspecific.fields.4" type="int32"/>
+         <field name="AdditionalReference"   tag="marketspecific.fields.5" type="string"/>
+       <!-- SGX-ST specific -->
+         <field name="CpfFlag"               tag="marketspecific.fields.6" type="CpfFlagEnum"/>
+         <field name="ContraTrade"           tag="marketspecific.fields.7" type="boolean"/>
+
+       <!-- PHLX specific -->
+         <!--field name="QuoteCondition"        tag="marketspecific.fields.5" type="QuoteConditionEnum"/-->
+      </fields>
+      <types>
+         <enums>
+           <enum name="HedgeSpecEnum"  type="char" tag="marketspecific.types.1">
+              <value name="Hedger"                 value="0" label="Hedger" />
+              <value name="Speculator"             value="1" label="Speculator" />
+           </enum>
+           <!--enum name="QuoteConditionEnum"  type="char" tag="marketspecific.types.5">
+              <value name="Regular"         value=" " label="Regular Quote" />
+              <value name="Rotation"        value="R" label="Rotation Quote" />
+              <value name="TradingHalt"     value="T" label="Trading Halt" />
+           </enum-->
+           <enum name="CpfFlagEnum"  type="char" tag="marketspecific.types.6">
+              <value name="CPF"                 value="x" label="CPF trade" />
+              <value name="FirstTranche"        value="s" label="1st tranche" />
+              <value name="SecondTranche"       value="2" label="2nd tranche" />
+              <value name="SRS"                 value="e" label="SRS trade" />
+           </enum>
+         </enums>
+      </types>
+   </namespace>
+</service-definitions>

@@ -21,7 +21,7 @@ using namespace std;
  */
 void prog_exit(int signo);
 
-application<update_thread> app;
+application<kt::update_thread> app;
 int main(int argc, char** argv) {
 
     bool ret = app.init_main(argc,argv,prog_exit);

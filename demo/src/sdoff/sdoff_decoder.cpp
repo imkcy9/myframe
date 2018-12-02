@@ -121,7 +121,9 @@ inline void decode_field_value(kt::field_value_t& value, unsigned char **buffer_
             std::cout << value.GetString_value() << std::endl;
             break;
         case kt::FIELD_STRUCT: {
-            int length = fast_decode_int(buffer_);
+            int32_t* plen = (int32_t*)*buffer_;
+            int32_t length = *plen;
+            *buffer_ += 4;
             kt::field_struct_t field_struct;
             decode_field_list(field_struct, buffer_, length);
             value = kt::field_value_t::value_of(&field_struct);

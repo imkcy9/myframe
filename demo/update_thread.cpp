@@ -20,8 +20,9 @@
 #include <iostream>
 
 kt::update_thread::update_thread(zmq::context_t* ctx)
-: m_sock(*ctx, ZMQ_STREAM)
-, _md_service(NULL) {
+:_ctx(ctx) 
+,m_sock(*ctx, ZMQ_STREAM)
+,_service_manager(NULL){
     //add_message_mapping(1005,&update_thread::on_recv_tick);
     //add_message_mapping(1004,&update_thread::on_recv_hb);
 }
@@ -37,26 +38,29 @@ bool kt::update_thread::init() {
 
     //m_sock.setsockopt(ZMQ_CONNECT_RID,"server",6);
     //m_sock.connect("tcp://192.168.19.193:59005");
-    if (!_md_service) {
-        _md_service = new md_service();
+    if(!_service_manager) {
+        _service_manager = new service_manager(this->_ctx, this, this);
+        _service_manager->init();
     }
 
     m_sock.bind("tcp://*:10003");
     add_socket(&m_sock, this);
-    return true;
+    
+    return kt::sd_definition_loader::init();
 }
 
 void kt::update_thread::before_end() {
     m_sock.close();
-    if(_md_service) {
-        delete _md_service;
+    if(_service_manager) {
+        _service_manager->close();
+        delete _service_manager;
     }
     LOG_INFO("update_thread end");
 }
 
 bool kt::update_thread::before_start() {
     LOG_INFO("update_thread before_start");
-    return kt::sd_definition_loader::init();
+    return true;
 }
 
 void kt::update_thread::zmq_timer_event(int id_) {
@@ -73,28 +77,18 @@ void kt::update_thread::zmq_timer_event(int id_) {
 }
 
 void kt::update_thread::on_recv_sd_message(kt::sd_message_t* sd_message_, kt::user& user_) {
-    switch (sd_message_->GetService_tag()) {
-        case sd_constants_t::Services::MarketDataService:
-            _md_service->on_message(*sd_message_, user_);
-            break;
-        case sd_constants_t::Services::InstrumentService:
-            //
-            break;
-        case sd_constants_t::Services::MassQuoteService:
-            //
-            break;
-        case sd_constants_t::Services::OrderService:
-            //
-            break;
-        case sd_constants_t::Services::TradeReportService:
-            //
-            break;
-        default:
-            break;
-    }
-    int i = 0;
+    this->_service_manager->on_sd_message(sd_message_,user_);
 }
 
 void kt::update_thread::on_disconnect(kt::user user_) {
     LOG_INFO("on_disconnect {}", user_.to_string());
 }
+
+bool kt::update_thread::send_sd_message(kt::sd_message_t& sd_message_, kt::user& user_) {
+    std::string& data = encode(sd_message_);
+    this->m_sock.send(user_.GetRouter_id().data(), user_.GetRouter_id().size(), ZMQ_SNDMORE);
+    this->m_sock.send(data.c_str(), data.size());
+    return true;
+}
+
+

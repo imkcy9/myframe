@@ -3,6 +3,7 @@ PROJECT(demo)
 
 AUX_SOURCE_DIRECTORY(./ SRC_LIST)
 AUX_SOURCE_DIRECTORY(./src SRC_LIST)
+AUX_SOURCE_DIRECTORY(./src/exchange SRC_LIST)
 AUX_SOURCE_DIRECTORY(./src/service SRC_LIST)
 AUX_SOURCE_DIRECTORY(./src/model SRC_LIST)
 AUX_SOURCE_DIRECTORY(./src/sd SRC_LIST)
@@ -18,9 +19,10 @@ SET(CMAKE_CXX_COMPILER g++)
 #add_compile_options(-std=c++11)
 #add_compile_options(-std=c++11)
 #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-ADD_DEFINITIONS(-std=c++11 -g -W -Wall -Wno-unused -DUSE_SPDLOG -DZMQ_BUILD_DRAFT_API -DSPDLOG_TRACE_ON -DLINUX -Werror=return-type -Werror=nonnull -Werror=invalid-offsetof -Wno-deprecated ${CMAKE_CXX_FLAGS})
+ADD_DEFINITIONS(-std=c++11 -g -fpermissive -W -Wno-unused -DUSE_SPDLOG -DZMQ_BUILD_DRAFT_API -DSPDLOG_TRACE_ON -DLINUX -Werror=return-type -Werror=nonnull -Werror=invalid-offsetof -Wno-deprecated ${CMAKE_CXX_FLAGS})
 
 INCLUDE_DIRECTORIES(
+./
         ../src
 	./src/
 	../public/include
@@ -29,6 +31,7 @@ INCLUDE_DIRECTORIES(
 	../public/include/mysql-connector
 	/usr/local/include
 ../../../include
+../../../XAPI2/include/
 )
 
 LINK_DIRECTORIES(
@@ -37,8 +40,9 @@ LINK_DIRECTORIES(
 	../../public/lib/centos
 ./src
 ../../../lib
+../../../XAPI2/lib
 )
 
 ADD_EXECUTABLE(demo ${SRC_LIST} ys_decoder.cpp ys_decoder.h decoder_base.h)
 
-TARGET_LINK_LIBRARIES(demo pthread tinyxml2 curl zmq uWS protobuf mysqlcppconn-static dl)
+TARGET_LINK_LIBRARIES(demo pthread tinyxml2 curl zmq uWS protobuf mysqlcppconn-static dl  -lXAPI_CPP )

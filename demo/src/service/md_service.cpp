@@ -14,8 +14,8 @@
 #include "md_service.h"
 #include "log.h"
 #include "sd/data/sd_constants.h"
-kt::md_service::md_service()
-:base_service(sd_constants_t::Services::MarketDataService)
+kt::md_service::md_service(orcfix_msg_dispatcher* call_back)
+:base_service(sd_constants_t::Services::MarketDataService, call_back)
 {
 }
 
@@ -23,7 +23,11 @@ kt::md_service::~md_service() {
 }
 
 void kt::md_service::handle_message(kt::sd_message_t& sd_message_) {
-
+    if(sd_message_.GetMessage_tag() == sd_constants_t::MessageTypes::CreateOrderReq) {
+        field_struct_t* fstruct = sd_message_.get_value(sd_constants_t::fields.Order)->GetField_struct();
+        std::string orderBookId = fstruct->get_string(sd_constants_t::fields.OrderBookId);
+        LOG_DEBUG("handle_message {}", orderBookId);
+    }
 }
 
 void kt::md_service::handle_login(kt::user user_) {
@@ -34,4 +38,7 @@ void kt::md_service::handle_logout(kt::user user_) {
 
 }
 
+void kt::md_service::on_rsp_qry_instrument(InstrumentField* pInstrument, bool bIsLast) {
+    LOG_DEBUG("on_rsp_qry_instrument {} {}", pInstrument->InstrumentName, pInstrument->Symbol);
+}
 

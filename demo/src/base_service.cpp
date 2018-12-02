@@ -14,8 +14,10 @@
 #include "base_service.h"
 #include "sd/data/sd_constants.h"
 #include "log.h"
-kt::base_service::base_service(int service_tag)
+#include "orcfix_msg_dispatcher.h"
+kt::base_service::base_service(int service_tag,orcfix_msg_dispatcher* call_back)
 :_service_tag(service_tag)
+,_call_back(call_back)
 {
 }
 
@@ -43,8 +45,8 @@ void kt::base_service::on_message(kt::sd_message_t& sd_message_, kt::user& user_
     }
 }
 
-void kt::base_service::send(kt::sd_message_t& sd_message_, kt::blob_t& router_id_) {
-
+void kt::base_service::send(kt::sd_message_t& sd_message_, kt::user& user_) {
+    _call_back->send_sd_message(sd_message_,user_);
 }
 
 void kt::base_service::on_login_req(kt::sd_message_t& sd_message_,kt::user& user_) {
@@ -70,7 +72,7 @@ void kt::base_service::on_login_req(kt::sd_message_t& sd_message_,kt::user& user
     reply_message.add(sd_constants_t::fields.ServiceImplVersion, "1.0");
     reply_message.add(sd_constants_t::fields.MessageEncoding, "UTF-8");
     
-    //todo:  send the msg
+    this->send(reply_message,user_);
     this->handle_login(user_);
 }
 

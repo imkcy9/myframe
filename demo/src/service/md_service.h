@@ -14,10 +14,11 @@
 #ifndef MD_SERVICE_H
 #define MD_SERVICE_H
 #include "../base_service.h"
+#include "XApiCpp.h"
 namespace kt {
 class md_service : public base_service  {
 public:
-    md_service();
+    md_service(orcfix_msg_dispatcher* call_back);
     virtual ~md_service();
     
     void handle_message(kt::sd_message_t& sd_message_) override;
@@ -26,6 +27,7 @@ public:
 
     void handle_login(kt::user user_) override;
 
+    void on_rsp_qry_instrument(InstrumentField* pInstrument, bool bIsLast);
 private:
 };
 }

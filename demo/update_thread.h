@@ -18,6 +18,9 @@
 #include "src/sdoff/sdoff_decoder.h"
 #include "orcfix_msg_dispatcher.h"
 #include "src/service/md_service.h"
+#include "XApiCpp.h"
+#include "exchange/xspi_impl.h"
+#include "service/service_manager.h"
 
 namespace kt {
 class update_thread : public orcfix_msg_dispatcher, public zmq_poller_reactor {
@@ -33,6 +36,7 @@ public:
     
     void on_disconnect(kt::user user_) override;
 
+    bool send_sd_message(kt::sd_message_t& sd_message_, kt::user& user_) override;
 private:
     enum timer_id {
         timer_test = 0,
@@ -42,10 +46,11 @@ private:
     bool before_start() override;
 
     void before_end() override;
-
-    zmq::socket_t m_sock;
     
-    md_service* _md_service;
+
+    zmq::context_t* _ctx;
+    zmq::socket_t m_sock;
+    service_manager* _service_manager;
 };
 }
 #endif /* UPDATE_THREAD_H */

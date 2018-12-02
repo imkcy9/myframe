@@ -33,6 +33,6 @@ int main(int argc, char** argv) {
 }
 
 void prog_exit(int /*signo*/) {
-    LOG_WARN("exit");
+    //LOG_WARN("exit");
     app.stop();
 }

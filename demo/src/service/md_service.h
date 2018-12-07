@@ -28,7 +28,15 @@ public:
     void handle_login(kt::user user_) override;
 
     void on_rsp_qry_instrument(InstrumentField* pInstrument, bool bIsLast);
+    
+    void OnRtnDepthMarketDataN(DepthMarketDataNField* pMarketData);
 private:
+    
+    void handle_topofbood_subscription(kt::sd_message_t& sd_message_);
+    
+    void handle_rfq_subscription(kt::sd_message_t& sd_message_);
+    
+    void handle_depth_subscription(kt::sd_message_t& sd_message_);
 };
 }
 

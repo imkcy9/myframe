@@ -64,6 +64,7 @@ public:
 private:
 
     zmq::socket_t _rsp_push;
+    zmq::socket_t _md_push;
 };
 
 #endif /* XSPI_IMPL_H */

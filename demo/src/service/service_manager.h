@@ -36,6 +36,7 @@ namespace kt {
         virtual void zmq_timer_event(int id_);
 
         void on_sd_message(kt::sd_message_t* sd_message_, kt::user& user_);
+        void on_disconnect(kt::user user_);
     private:
         bool exchange_login();
         void exchange_logout();

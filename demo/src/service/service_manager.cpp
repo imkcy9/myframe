@@ -33,13 +33,14 @@ kt::service_manager::~service_manager() {
 
 bool kt::service_manager::init() {
 
-    _rsp_pull.connect("inproc://exchange");
+    _rsp_pull.bind("inproc://exchange");
     _reactor->add_socket(&_rsp_pull, this);
     if (!exchange_login()) {
         LOG_ERROR("exchange login fail..");
         return false;
     }
-    _reactor->timers_add(1, 10 * 1000, this);
+    _reactor->timers_add(1,5 * 1000, this);
+    _reactor->timers_add(2,5 * 1000, this);
     return true;
 }
 
@@ -55,17 +56,18 @@ void kt::service_manager::zmq_in_event(zmq::socket_t* socket) {
     zmq::message_t type;
     socket->recv(&type);
     assert(type.size() == 1 && type.more());
+    const char* c = (const char*) type.data();
     zmq::message_t msg;
     socket->recv(&msg);
     if (msg.more()) {
         bool islast = true;
-        socket->recv(&islast, sizeof(bool));
-        
-        const char* c = (const char*) type.data();
+        int si = socket->recv(&islast, sizeof(bool));
+        assert(si == sizeof(bool));
         switch (*c) {
             case ResponseType_OnRspQryInstrument:
                 assert(sizeof(InstrumentField) == msg.size());
                 _md_service->on_rsp_qry_instrument((InstrumentField*)msg.data(), islast);
+               _md->Subscribe(((InstrumentField*)msg.data())->Symbol, "");
                 break;
             case ResponseType_OnRspQryTradingAccount:
             case ResponseType_OnRspQryInvestorPosition:
@@ -73,9 +75,21 @@ void kt::service_manager::zmq_in_event(zmq::socket_t* socket) {
             case ResponseType_OnRspQryOrder:
             case ResponseType_OnRspQryTrade:
             case ResponseType_OnRspQryQuote:
-
+                assert(false);
                 break;
             default:
+                assert(false);
+                break;
+        }
+    } else {
+        switch (*c) {
+            case ResponseType_OnRtnDepthMarketData:
+                //assert(sizeof(DepthMarketDataNField) == msg.size());
+                assert(((DepthMarketDataNField*)msg.data())->Size == msg.size());
+                _md_service->OnRtnDepthMarketDataN((DepthMarketDataNField*)msg.data());
+                break;
+            default:
+                assert(false);
                 break;
         }
     }
@@ -95,15 +109,21 @@ void kt::service_manager::zmq_timer_event(int id_) {
         OrderIDType Out = { 0 };
 		OrderField* pOrder = new OrderField();
 		memset(pOrder, 0, sizeof(OrderField));
-		strcpy(pOrder->InstrumentID, "IF1504");
+		strcpy(pOrder->InstrumentID, "SR901");
 		pOrder->OpenClose = OpenCloseType::OpenCloseType_Open;
 		pOrder->HedgeFlag = HedgeFlagType::HedgeFlagType_Speculation;
-		pOrder->Price = 4000;
+		pOrder->Price = 4800;
 		pOrder->Qty = 1;
 		pOrder->Type = OrderType::OrderType_Limit;
 		pOrder->Side = OrderSide::OrderSide_Buy;
-
-		_td->SendOrder(pOrder, 1, Out);
+                strcpy(pOrder->OrderID, "9");
+                strcpy(pOrder->OrderID, "222");
+                strcpy(pOrder->LocalID, "10");
+                pOrder->ReserveInt32 = 11;
+                    
+		//_td->SendOrder(pOrder, 1, Out);
+                _md->Subscribe("IH1812", "");
+                _reactor->timers_cancel(id_, this);
     }
 }
 
@@ -148,6 +168,15 @@ bool kt::service_manager::exchange_login() {
 
     strcpy(m_UserInfo.UserID, "005890");
     strcpy(m_UserInfo.Password, "123456");
+    
+//        strcpy(m_ServerInfo1.BrokerID, "1010");
+//    strcpy(m_ServerInfo1.Address, "tcp://114.255.82.175:41205");
+//
+//    strcpy(m_ServerInfo2.BrokerID, "1010");
+//    strcpy(m_ServerInfo2.Address, "tcp://114.255.82.175:41213");
+//
+//    strcpy(m_UserInfo.UserID, "10028498");
+//    strcpy(m_UserInfo.Password, "yhdr@4321");
 
 
 
@@ -186,4 +215,8 @@ void kt::service_manager::exchange_logout() {
     _td->Disconnect();
     _md->Disconnect();
     LOG_INFO("all�Disconnect");
+}
+
+void kt::service_manager::on_disconnect(kt::user user_) {
+    this->_md_service->disconnect(user_);
 }

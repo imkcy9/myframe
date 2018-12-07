@@ -43,6 +43,10 @@ bool kt::update_thread::init() {
         _service_manager->init();
     }
 
+    int sndtimeo = 0;
+    m_sock.setsockopt(ZMQ_SNDTIMEO,&sndtimeo,sizeof(sndtimeo));
+    int sndhwm = 1024;
+    m_sock.setsockopt(ZMQ_SNDHWM,&sndhwm,sizeof(sndhwm));
     m_sock.bind("tcp://*:10003");
     add_socket(&m_sock, this);
     
@@ -82,12 +86,28 @@ void kt::update_thread::on_recv_sd_message(kt::sd_message_t* sd_message_, kt::us
 
 void kt::update_thread::on_disconnect(kt::user user_) {
     LOG_INFO("on_disconnect {}", user_.to_string());
+    _service_manager->on_disconnect(user_);
 }
 
 bool kt::update_thread::send_sd_message(kt::sd_message_t& sd_message_, kt::user& user_) {
-    std::string& data = encode(sd_message_);
-    this->m_sock.send(user_.GetRouter_id().data(), user_.GetRouter_id().size(), ZMQ_SNDMORE);
-    this->m_sock.send(data.c_str(), data.size());
+    try {
+        std::string& data = encode(sd_message_);
+        int ret = this->m_sock.send(user_.GetRouter_id().data(), user_.GetRouter_id().size(), ZMQ_SNDMORE);
+        if(ret != user_.GetRouter_id().size()) {
+            LOG_ERROR("time out");
+            return false;
+        }
+
+        ret = this->m_sock.send(data.c_str(), data.size());
+        if(ret != data.size()) {
+            LOG_ERROR("time out");
+            return false;
+        }
+
+    } catch (zmq::error_t& e) {
+        LOG_ERROR("{}", e.what());
+        this->on_disconnect(user_);
+    }
     return true;
 }
 

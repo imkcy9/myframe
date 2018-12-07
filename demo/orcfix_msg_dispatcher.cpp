@@ -5,6 +5,7 @@
  */
 
 #include "orcfix_msg_dispatcher.h"
+#include "log.h"
 
 void orcfix_msg_dispatcher::zmq_in_event(zmq::socket_t* socket) {
     ZMQ_ASSERT(socket);
@@ -25,14 +26,17 @@ void orcfix_msg_dispatcher::zmq_in_event(zmq::socket_t* socket) {
     if (insize == 0) {
         if (it == _clients.end()) {
             //connected;
+            LOG_DEBUG("user client connected");
             _clients.insert(std::make_pair(routerid, new kt::sdoff_decoder_t()));
         } else {
             //disconnected
             if (it->second) {
+                LOG_DEBUG("user {} client disconnected");
                 this->on_disconnect((reinterpret_cast<kt::sdoff_decoder_t*> (it->second))->getUser());
                 delete it->second;
             }
             _clients.erase(it);
+            
         }
         return;
     }
@@ -54,8 +58,11 @@ void orcfix_msg_dispatcher::zmq_in_event(zmq::socket_t* socket) {
 
         if (rc == 1) {
             //fix connected
-            socket->send(rid, ZMQ_SNDMORE);
-            socket->send("B", 1);
+            size_t size = socket->send(routerid.data(),routerid.size(), ZMQ_SNDMORE);
+            assert(size == routerid.size());
+            size = socket->send("B", 1);
+            assert(size == 1);
+            LOG_DEBUG("user client connected confirm");
             return;
         }
         if (rc == 2) {

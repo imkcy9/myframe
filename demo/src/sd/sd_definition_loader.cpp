@@ -82,7 +82,7 @@ kt::field_enum_type_t kt::sd_definition_loader::get_field_type(int tag) {
         type = field_type.GetType();
         if (type.find("Enum") != std::string::npos) {
             //todo;
-            int i = 0;
+            //return field_enum_type_t::INT8;
         } else {
             std::transform(type.begin(), type.end(), type.begin(), ::toupper);
             IF_AND_RETURN(type, "INT8", field_enum_type_t::INT8);

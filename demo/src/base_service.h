@@ -30,11 +30,14 @@ public:
     virtual void handle_message(kt::sd_message_t& sd_message_) = 0;
     virtual void handle_logout(kt::user user_) = 0;
     virtual void handle_login(kt::user user_) = 0;
+    void disconnect(kt::user user_);
+    
+    inline int get_service_tag(){return this->_service_tag;}
 protected:
     void send(kt::sd_message_t& sd_message_, kt::user& user_);
     void on_login_req(kt::sd_message_t& sd_message_,kt::user& user_);
-private:
     std::map<kt::blob_t, kt::user> _connected_users;
+private:
     int _service_tag;
     orcfix_msg_dispatcher* _call_back;
 };

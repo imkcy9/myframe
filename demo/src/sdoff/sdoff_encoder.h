@@ -15,6 +15,7 @@
 #define SDOFF_ENCODER_H
 #include <string>
 #include "../sd/data/field_struct.h"
+#include "./util/dumptool.h"
 namespace kt {
     class sd_message_t;
 
@@ -26,11 +27,11 @@ namespace kt {
 
         std::string& encode(kt::sd_message_t* sd_message_t);
     private:
-        void encode_field_list(std::string& buffer, kt::field_struct_t field_list);
-        void encode_field_value(std::string& buffer, kt::field_value_t value);
-        void encode_struct(std::string& buffer, kt::field_struct_t struct_field_list);
-        void encode_array(std::string& buffer, kt::field_value_t value);
-        void encode_primitive_type(std::string buffer, kt::field_value_t value, kt::field_enum_type_t type);
+        void encode_field_list(std::string& buffer, kt::field_struct_t& field_list);
+        void encode_field_value(std::string& buffer, kt::field_value_t& value);
+        void encode_struct(std::string& buffer, kt::field_struct_t& struct_field_list);
+        void encode_array(std::string& buffer, kt::field_value_t& value);
+        void encode_primitive_type(std::string& buffer, kt::field_value_t& value, kt::field_enum_type_t type);
         void encode_signed_long(std::string& buffer, long value);
         void encode_unsigned_long(std::string& buffer, long value, long mask);
         void encode_string(std::string& buffer, std::string value);

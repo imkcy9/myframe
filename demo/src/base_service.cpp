@@ -46,11 +46,25 @@ void kt::base_service::on_message(kt::sd_message_t& sd_message_, kt::user& user_
 }
 
 void kt::base_service::send(kt::sd_message_t& sd_message_, kt::user& user_) {
-    _call_back->send_sd_message(sd_message_,user_);
+    bool ret = _call_back->send_sd_message(sd_message_,user_);
+    if (!ret) {
+        LOG_ERROR("Send message error");
+    }
 }
 
 void kt::base_service::on_login_req(kt::sd_message_t& sd_message_,kt::user& user_) {
     //user user_(sd_message_.get_string(sd_constants_t::fields.Username), sd_message_.get_string(sd_constants_t::fields.Group));
+    kt::sd_message_t reply_message(kt::sd_constants_t::MessageTypes::LoginRsp, this->_service_tag, sd_message_.GetOperation_id());
+    field_value_t* value = sd_message_.get_value(sd_constants_t::fields.RequestId);
+    if(value) {
+        reply_message.add(sd_constants_t::fields.RequestId, *value);
+    }
+    reply_message.add(sd_constants_t::fields.ServiceVersion, "1.10");
+    reply_message.add(sd_constants_t::fields.ServiceImplVersion, "1.0");
+    reply_message.add(sd_constants_t::fields.MessageEncoding, "UTF-8");
+    
+    this->send(reply_message,user_);
+    
     LOG_INFO("on_login_req {}", user_.to_string());
     auto it = _connected_users.find(user_.GetRouter_id());
     if(it != _connected_users.end()) {
@@ -63,16 +77,13 @@ void kt::base_service::on_login_req(kt::sd_message_t& sd_message_,kt::user& user
         _connected_users.insert(std::make_pair(user_.GetRouter_id(), user_));
     }
 
-    kt::sd_message_t reply_message(kt::sd_constants_t::MessageTypes::LoginRsp, this->_service_tag, sd_message_.GetOperation_id());
-    field_value_t* value = sd_message_.get_value(sd_constants_t::fields.RequestId);
-    if(value) {
-        reply_message.add(sd_constants_t::fields.RequestId, *value);
-    }
-    reply_message.add(sd_constants_t::fields.ServiceVersion, "1.10");
-    reply_message.add(sd_constants_t::fields.ServiceImplVersion, "1.0");
-    reply_message.add(sd_constants_t::fields.MessageEncoding, "UTF-8");
     
-    this->send(reply_message,user_);
     this->handle_login(user_);
 }
 
+void kt::base_service::disconnect(kt::user user_) {
+    auto it = _connected_users.find(user_.GetRouter_id());
+    if(it != _connected_users.end() && it->second.to_string() == user_.to_string()) {
+        _connected_users.erase(it);
+    }
+}

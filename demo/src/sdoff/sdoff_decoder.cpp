@@ -130,10 +130,10 @@ inline void decode_field_value(kt::field_value_t& value, unsigned char **buffer_
         }
             break;
         case kt::FIELD_INT16:
-            value = kt::field_value_t::value_of((short)fast_decode_long(buffer_, true), kt::field_enum_type_t::INT16);
+            value = kt::field_value_t::value_of((long)(short)fast_decode_long(buffer_, true), kt::field_enum_type_t::INT16);
             break;
         case kt::FIELD_UINT16:
-            value = kt::field_value_t::value_of(fast_decode_int(buffer_), kt::field_enum_type_t::UINT16);
+            value = kt::field_value_t::value_of((long)fast_decode_int(buffer_), kt::field_enum_type_t::UINT16);
             break;
         case kt::FIELD_UINT32:
             value = kt::field_value_t::value_of(fast_decode_long(buffer_, false), kt::field_enum_type_t::UINT32);

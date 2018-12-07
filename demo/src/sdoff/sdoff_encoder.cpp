@@ -15,6 +15,7 @@
 
 #include "sdoff_encoder.h"
 #include "sd/data/sd_message.h"
+#include <iostream>
 
 kt::sdoff_encoder::sdoff_encoder() {
 }
@@ -34,7 +35,7 @@ std::string& kt::sdoff_encoder::encode(kt::sd_message_t* sd_message_) {
     int8_t operation_id = sd_message_->GetOperation_id();
     data.append((const char*)&operation_id, sizeof(operation_id));
     
-    encode_field_list(data, sd_message_);
+    encode_field_list(data, *sd_message_);
     
     int32_t data_size = data.size();
     int32_t dataLength = ntohl(data.size() + 4);
@@ -42,10 +43,13 @@ std::string& kt::sdoff_encoder::encode(kt::sd_message_t* sd_message_) {
     _in_progress.append((const char*)&dataLength, sizeof(dataLength));
     _in_progress.append((const char*)&data_size, sizeof(data_size));
     _in_progress.append(data);
+    size_t size = data.size();
+    size_t size2 = _in_progress.size();
+    //hexdump(_in_progress.data(), _in_progress.size(), 0);
     return this->_in_progress;
 }
 
-void kt::sdoff_encoder::encode_array(std::string& buffer, kt::field_value_t value) {
+void kt::sdoff_encoder::encode_array(std::string& buffer, kt::field_value_t& value) {
     buffer.append(1, ARRAY);
     std::vector<field_value_t> fields = value.GetField_values();
     size_t initial_pos = buffer.size();
@@ -60,16 +64,19 @@ void kt::sdoff_encoder::encode_array(std::string& buffer, kt::field_value_t valu
     buffer.append(tmpbuf);
 }
 
-void kt::sdoff_encoder::encode_field_list(std::string& buffer, kt::field_struct_t field_list) {
+void kt::sdoff_encoder::encode_field_list(std::string& buffer, kt::field_struct_t& field_list) {
     std::list<field_t>& lis = field_list.get_fields();
+    //hexdump(buffer.data(), buffer.size(),0);
     for(field_t& field : lis) {
         field_tag_t field_tag = field.GetTag();
         encode_unsigned_long(buffer, field_tag.GetTag(), -1L);
+        //hexdump(buffer.data(), buffer.size(),0);
         encode_field_value(buffer, field.GetField_value());
+        //hexdump(buffer.data(), buffer.size(),0);
     }
 }
 
-void kt::sdoff_encoder::encode_field_value(std::string& buffer, kt::field_value_t value) {
+void kt::sdoff_encoder::encode_field_value(std::string& buffer, kt::field_value_t& value) {
     field_enum_type_t type = value.GetType();
     if(type == field_enum_type_t::ARRAY) {
         encode_array(buffer,value);
@@ -80,7 +87,7 @@ void kt::sdoff_encoder::encode_field_value(std::string& buffer, kt::field_value_
     }
 }
 
-void kt::sdoff_encoder::encode_primitive_type(std::string buffer, kt::field_value_t value, kt::field_enum_type_t type) {
+void kt::sdoff_encoder::encode_primitive_type(std::string& buffer, kt::field_value_t& value, kt::field_enum_type_t type) {
     switch (type) {
         case field_enum_type_t::CHAR:
         case field_enum_type_t::INT8:
@@ -173,13 +180,13 @@ void kt::sdoff_encoder::encode_signed_long(std::string& buffer, long value) {
 }
 
 void kt::sdoff_encoder::encode_string(std::string& buffer, std::string value) {
-    size_t size = buffer.size();
-    encode_unsigned_long(buffer, size + 1, -1L);
+    size_t size = value.size();
+    encode_unsigned_long(buffer, size, -1L);
     buffer.append(value.c_str(), value.size());
-    buffer.append(1, '\0');
+    //buffer.append(1, '\0');
 }
 
-void kt::sdoff_encoder::encode_struct(std::string& buffer, kt::field_struct_t struct_field_list) {
+void kt::sdoff_encoder::encode_struct(std::string& buffer, kt::field_struct_t& struct_field_list) {
     buffer.append(1, STRUCT);
     
     std::string tmpbuf;

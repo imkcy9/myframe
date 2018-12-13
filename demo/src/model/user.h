@@ -38,8 +38,16 @@ namespace kt {
             return _router_id;
         }
 
-        std::string to_string() {
+        std::string to_string() const {
             return _user_name + ":" + _group;
+        }
+        
+        bool operator<(const user& user_)  {
+            const int cmpres = to_string().compare(user_.to_string());
+            if(cmpres == 0) {
+                return _router_id < user_.GetRouter_id();
+            }
+            return cmpres < 0;
         }
     private:
         std::string _user_name;

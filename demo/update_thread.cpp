@@ -54,11 +54,11 @@ bool kt::update_thread::init() {
 }
 
 void kt::update_thread::before_end() {
-    m_sock.close();
     if(_service_manager) {
         _service_manager->close();
         delete _service_manager;
     }
+    m_sock.close();
     LOG_INFO("update_thread end");
 }
 

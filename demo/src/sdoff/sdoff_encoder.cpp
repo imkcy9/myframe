@@ -181,9 +181,9 @@ void kt::sdoff_encoder::encode_signed_long(std::string& buffer, long value) {
 
 void kt::sdoff_encoder::encode_string(std::string& buffer, std::string value) {
     size_t size = value.size();
-    encode_unsigned_long(buffer, size, -1L);
+    encode_unsigned_long(buffer, size + 1, -1L);
     buffer.append(value.c_str(), value.size());
-    //buffer.append(1, '\0');
+    buffer.append(1, '\0');
 }
 
 void kt::sdoff_encoder::encode_struct(std::string& buffer, kt::field_struct_t& struct_field_list) {

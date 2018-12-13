@@ -37,8 +37,8 @@ private:
     static std::unordered_map<int, kt::service_type_t> _orc_services;
     static std::unordered_map<int, kt::field_type_t> _fields;
     static std::unordered_map<std::string, int> _field_tags;
-    static std::unordered_map<std::string, kt::field_enum_type_t> _types;
-    
+    //static std::unordered_map<std::string, kt::field_enum_type_t> _types;
+    static std::unordered_map<std::string, std::string> _types;
     static void process_namespace(service_definitions::xml_namespace);
     
 };

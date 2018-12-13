@@ -27,7 +27,7 @@ public:
     
     void on_message(kt::sd_message_t& sd_message_, kt::user& user_);
     
-    virtual void handle_message(kt::sd_message_t& sd_message_) = 0;
+    virtual void handle_message(kt::sd_message_t& sd_message_, kt::user& user_) = 0;
     virtual void handle_logout(kt::user user_) = 0;
     virtual void handle_login(kt::user user_) = 0;
     void disconnect(kt::user user_);

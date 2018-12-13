@@ -24,9 +24,9 @@ kt::service_manager::service_manager(zmq::context_t* ctx, orcfix_msg_dispatcher*
 , _td(NULL)
 , _md(NULL) {
     if (!_md_service) {
-        _md_service = new md_service(call_back);
+        _md_service = new md_service(call_back, &_md);
     }
-}
+} 
 
 kt::service_manager::~service_manager() {
 }
@@ -67,7 +67,7 @@ void kt::service_manager::zmq_in_event(zmq::socket_t* socket) {
             case ResponseType_OnRspQryInstrument:
                 assert(sizeof(InstrumentField) == msg.size());
                 _md_service->on_rsp_qry_instrument((InstrumentField*)msg.data(), islast);
-               _md->Subscribe(((InstrumentField*)msg.data())->Symbol, "");
+                //_md->Subscribe(((InstrumentField*)msg.data())->InstrumentID, "");
                 break;
             case ResponseType_OnRspQryTradingAccount:
             case ResponseType_OnRspQryInvestorPosition:
@@ -100,8 +100,9 @@ void kt::service_manager::zmq_out_event() {
 }
 
 void kt::service_manager::zmq_timer_event(int id_) {
+    LOG_DEBUG("zmq_timer_event {}", id_);
     if(id_ == 1) {
-        LOG_DEBUG("zmq_timer_event");
+        
         ReqQueryField query_field;
         memset(&query_field, 0,sizeof(ReqQueryField));
         _td->ReqQuery(QueryType_ReqQryInstrument, &query_field);
@@ -122,7 +123,7 @@ void kt::service_manager::zmq_timer_event(int id_) {
                 pOrder->ReserveInt32 = 11;
                     
 		//_td->SendOrder(pOrder, 1, Out);
-                _md->Subscribe("IH1812", "");
+                //_md->Subscribe("IH1812", "");
                 _reactor->timers_cancel(id_, this);
     }
 }

@@ -33,7 +33,8 @@ std::unordered_map<int, kt::message_type_t> kt::sd_definition_loader::_orc_messa
 std::unordered_map<int, kt::service_type_t> kt::sd_definition_loader::_orc_services;
 std::unordered_map<int, kt::field_type_t> kt::sd_definition_loader::_fields;
 std::unordered_map<std::string, int> kt::sd_definition_loader::_field_tags;
-std::unordered_map<std::string, kt::field_enum_type_t> kt::sd_definition_loader::_types;
+//std::unordered_map<std::string, kt::field_enum_type_t> kt::sd_definition_loader::_types;
+std::unordered_map<std::string, std::string> kt::sd_definition_loader::_types;
 
 bool kt::sd_definition_loader::init() {
     service_definitions service;
@@ -80,32 +81,39 @@ kt::field_enum_type_t kt::sd_definition_loader::get_field_type(int tag) {
     if (it != _fields.end()) {
         kt::field_type_t& field_type = it->second;
         type = field_type.GetType();
+        if(field_type.IsArray()) {
+            return field_enum_type_t::ARRAY;
+        }
         if (type.find("Enum") != std::string::npos) {
             //todo;
             //return field_enum_type_t::INT8;
-        } else {
-            std::transform(type.begin(), type.end(), type.begin(), ::toupper);
-            IF_AND_RETURN(type, "INT8", field_enum_type_t::INT8);
-            IF_AND_RETURN(type, "INT16", field_enum_type_t::INT16);
-            IF_AND_RETURN(type, "INT32", field_enum_type_t::INT32);
-            IF_AND_RETURN(type, "INT64", field_enum_type_t::INT64);
-            IF_AND_RETURN(type, "UINT32", field_enum_type_t::UINT32);
-            IF_AND_RETURN(type, "UINT64", field_enum_type_t::UINT64);
-            IF_AND_RETURN(type, "STRING", field_enum_type_t::STRING);
-            IF_AND_RETURN(type, "UINT16", field_enum_type_t::UINT16);
-            IF_AND_RETURN(type, "CHAR", field_enum_type_t::CHAR);
-            IF_AND_RETURN(type, "STRUCT", field_enum_type_t::STRUCT);
-            IF_AND_RETURN(type, "ARRAY", field_enum_type_t::ARRAY);
-            IF_AND_RETURN(type, "REAL64", field_enum_type_t::REAL64);
-            IF_AND_RETURN(type, "REAL32", field_enum_type_t::REAL32);
-            IF_AND_RETURN(type, "BOOLEAN", field_enum_type_t::BOOLEAN);
-            IF_AND_RETURN(type, "DATE", field_enum_type_t::DATE);
-            IF_AND_RETURN(type, "TIME", field_enum_type_t::TIME);
-            IF_AND_RETURN(type, "TIMESTAMP", field_enum_type_t::TIMESTAMP);
-            IF_AND_RETURN(type, "DATETIME", field_enum_type_t::DATETIME);
-            IF_AND_RETURN(type, "OCTETS", field_enum_type_t::OCTETS);
-            IF_AND_RETURN(type, "UNKNOWN", field_enum_type_t::UNKNOWN);
-        } 
+            auto ty = _types.find(type);
+            if(ty != _types.end()) {
+                type = ty->second;
+            }
+        }
+        std::transform(type.begin(), type.end(), type.begin(), ::toupper);
+        IF_AND_RETURN(type, "INT8", field_enum_type_t::INT8);
+        IF_AND_RETURN(type, "INT16", field_enum_type_t::INT16);
+        IF_AND_RETURN(type, "INT32", field_enum_type_t::INT32);
+        IF_AND_RETURN(type, "INT64", field_enum_type_t::INT64);
+        IF_AND_RETURN(type, "UINT32", field_enum_type_t::UINT32);
+        IF_AND_RETURN(type, "UINT64", field_enum_type_t::UINT64);
+        IF_AND_RETURN(type, "STRING", field_enum_type_t::STRING);
+        IF_AND_RETURN(type, "UINT16", field_enum_type_t::UINT16);
+        IF_AND_RETURN(type, "CHAR", field_enum_type_t::CHAR);
+        IF_AND_RETURN(type, "STRUCT", field_enum_type_t::STRUCT);
+        IF_AND_RETURN(type, "ARRAY", field_enum_type_t::ARRAY);
+        IF_AND_RETURN(type, "REAL64", field_enum_type_t::REAL64);
+        IF_AND_RETURN(type, "REAL32", field_enum_type_t::REAL32);
+        IF_AND_RETURN(type, "BOOLEAN", field_enum_type_t::BOOLEAN);
+        IF_AND_RETURN(type, "DATE", field_enum_type_t::DATE);
+        IF_AND_RETURN(type, "TIME", field_enum_type_t::TIME);
+        IF_AND_RETURN(type, "TIMESTAMP", field_enum_type_t::TIMESTAMP);
+        IF_AND_RETURN(type, "DATETIME", field_enum_type_t::DATETIME);
+        IF_AND_RETURN(type, "OCTETS", field_enum_type_t::OCTETS);
+        IF_AND_RETURN(type, "UNKNOWN", field_enum_type_t::UNKNOWN);
+
         return field_enum_type_t::STRUCT;
     }
     return field_enum_type_t::UNKNOWN;
@@ -155,7 +163,10 @@ void kt::sd_definition_loader::process_namespace(service_definitions::xml_namesp
     size_t size2 = _field_tags.size();
     //todo
     types_type_t& types_type = namespace_.GetTypes_type();
-
+    std::list<type_t>& types = types_type.GetTypes();
+    for(type_t& t : types) {
+        _types.insert(std::pair<std::string,std::string>(t.GetName(),t.GetType()));
+    }
 
 }
 

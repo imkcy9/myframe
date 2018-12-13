@@ -40,7 +40,7 @@ void kt::base_service::on_message(kt::sd_message_t& sd_message_, kt::user& user_
             //on_logout_req(sd_message_);
             break;
         default:
-            handle_message(sd_message_);
+            handle_message(sd_message_, user_);
             break;
     }
 }
@@ -84,6 +84,7 @@ void kt::base_service::on_login_req(kt::sd_message_t& sd_message_,kt::user& user
 void kt::base_service::disconnect(kt::user user_) {
     auto it = _connected_users.find(user_.GetRouter_id());
     if(it != _connected_users.end() && it->second.to_string() == user_.to_string()) {
+        handle_logout(user_);
         _connected_users.erase(it);
     }
 }

@@ -146,7 +146,9 @@ void kt::service_definitions::add_fields_to_namespace(xml_namespace& des_namespa
         
         attribute = field->ToElement()->FindAttribute("array");
         if(attribute)  {
-            field_type.SetArray(attribute->Value());
+            if(strcmp(attribute->Value(), "true") == 0) {
+                field_type.SetArray(true);
+            }
         }
         
         fiels_list.push_back(field_type);
@@ -155,6 +157,19 @@ void kt::service_definitions::add_fields_to_namespace(xml_namespace& des_namespa
 
 void kt::service_definitions::add_types_to_namespace(xml_namespace& des_namespace, tinyxml2::XMLNode* node) {
     types_type_t& types_type = des_namespace.GetTypes_type();
+    std::list<type_t>& types = types_type.GetTypes();
+    for(XMLElement* field = node->FirstChildElement("enums"); field != NULL ; field = field->NextSiblingElement("enums")) {
+        std::string field_name = field->Name();
+        for(XMLElement* ele = field->FirstChildElement("enum"); ele != NULL ; ele = ele->NextSiblingElement("enum")) {
+            std::string field = ele->Name();
+            std::string name = ele->FindAttribute("name")->Value();
+            std::string type = ele->FindAttribute("type")->Value();
+            type_t t;
+            t.SetName(name);
+            t.SetType(type);
+            types.push_back(t);
+        }
+    }
 }
 
 void kt::service_definitions::add_messages_to_namespace(xml_namespace& des_namespace, tinyxml2::XMLNode* node) {

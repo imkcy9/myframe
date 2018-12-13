@@ -93,6 +93,14 @@ void zmq_poller_reactor::add_socket(zmq::socket_t* socket, zmq_poll_events* even
     m_poll_sockets.push_back(std::make_pair(socket,event));
 }
 
+void zmq_poller_reactor::timers_add(int id_, size_t interval, zmq_poll_events* event) {
+    timer::timers_add(id_,interval, event);
+}
+
+int zmq_poller_reactor::timers_cancel(int id_, zmq_poll_events* event) {
+    return timer::timers_cancel(id_,event);
+}
+
 mailbox_t<event>* zmq_poller_reactor::get_mailbox() {
     return &m_mailbox;
 }

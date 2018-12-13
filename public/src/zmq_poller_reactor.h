@@ -33,7 +33,8 @@ public:
     virtual void stop();
     
     void add_socket(zmq::socket_t* socket, zmq_poll_events* event);
-    
+    void timers_add(int id_, size_t interval, zmq_poll_events* event);
+    int timers_cancel(int id_,zmq_poll_events* event);
     mailbox_t<event>* get_mailbox();
     
 protected:

@@ -376,6 +376,20 @@ namespace kt {
             GetResourceOperation = 16,
             EnterTradeReportOperation = 4
         };
+
+        enum Subscriptions {
+            InstrumentsSubscription = 4,
+            TopOfBookSubscription = 3,
+            TickRuleTablesSubscription = 6,
+            OrderBooksSubscription = 7,
+            OrdersSubscription = 8,
+            TradesSubscription = 9,
+            DepthSubscription = 4,
+            QuoteSubscription = 7,
+            QuoteProtectionOperation = 11,
+            QuoteProtectionSubscription = 13,
+            RfqSubscription = 7
+        };
     };
 
 

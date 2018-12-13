@@ -39,14 +39,15 @@ namespace kt {
             if(type != value.GetType()) {
                 if(!(type == field_enum_type_t::DATETIME && value.GetType() == field_enum_type_t::UINT64) && 
                         !(type == field_enum_type_t::DATE && value.GetType() == field_enum_type_t::UINT32) &&
-                        !(type == field_enum_type_t::CHAR && value.GetType() == field_enum_type_t::INT8)) {
+                        !(type == field_enum_type_t::CHAR && value.GetType() == field_enum_type_t::INT8) &&
+                        !(type == field_enum_type_t::INT8 && value.GetType() == field_enum_type_t::CHAR)) {
                     return false;
                 }
             }
             _fields.push_back(field_t(tag,value));
-            if(_inbound) {
+            //if(_inbound) {
                 _field_map.insert(std::make_pair(tag.GetTag(), value));
-            }
+            //}
             
             return true;
         }
@@ -54,9 +55,12 @@ namespace kt {
         bool add(field_tag_t tag, std::string value) {
             return this->add(tag, field_value_t::value_of(value));
         }
+        bool add(field_tag_t tag, char value) {
+            return this->add(tag, field_value_t::value_of(value));
+        }
         
         bool add(field_tag_t tag, bool value) {
-            return this->add(tag, field_value_t::value_of(value, field_enum_type_t::BOOLEAN));
+            return this->add(tag, field_value_t::value_of(value));
         }
         
         bool add(field_tag_t tag, double value) {

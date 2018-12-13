@@ -59,6 +59,9 @@ namespace kt {
             std::string name = sd_definition_loader::get_field_name(tag);
             field_tag = new field_tag_t(name, tag, field_type);
             //todo;
+            if(tag < CACHE_SIZE) {
+                field_vec_cache[tag] = field_tag;
+            }
             return *field_tag;
         }
         

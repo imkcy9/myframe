@@ -13,10 +13,17 @@
 
 #ifndef TYPES_TYPE_H
 #define TYPES_TYPE_H
+#include "type.h"
 
 namespace kt {
     class types_type_t {
-        
+    public:
+        std::list<type_t>& GetTypes() {
+            return _types;
+        }
+
+    protected:
+        std::list<type_t> _types;
     };
 }
 

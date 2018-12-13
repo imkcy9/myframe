@@ -17,11 +17,16 @@
 namespace kt {
     class field_type_t {
     public:
-        std::string GetArray() const {
+        field_type_t()
+        :_array(false) {
+            
+        }
+        virtual ~field_type_t(){}
+        bool IsArray() const {
             return _array;
         }
 
-        void SetArray(std::string _array) {
+        void SetArray(bool _array) {
             this->_array = _array;
         }
 
@@ -71,7 +76,7 @@ namespace kt {
         std::string _type;
         std::string _size;
         std::string _comment;
-        std::string _array;
+        bool _array;
     };
 }
 

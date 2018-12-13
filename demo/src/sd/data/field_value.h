@@ -19,6 +19,7 @@
 #include <vector>
 #include <assert.h>
 #include "field_enum_type.h"
+#include <memory>
 //#include "field_struct.h"
 namespace kt {
     class field_struct_t;
@@ -34,12 +35,12 @@ namespace kt {
 
         virtual ~field_value_t();
 
-        bool IsBoolen_value() const {
+        bool GetBoolen_value() const {
             return _boolen_value;
         }
 
         field_struct_t* GetField_struct() const {
-            return _field_struct;
+            return _field_struct.get();
         }
 
         std::vector<field_value_t>& GetField_values() {
@@ -49,9 +50,21 @@ namespace kt {
         int8_t GetInt8_value() const {
             return _int8_value;
         }
+        
+        int16_t GetInt16_value() const {
+            return (int16_t)_int32_value;
+        }
+        
+        int GetUInt16_value() const {
+            return _int32_value;
+        }
 
         int32_t GetInt32_value() const {
             return _int32_value;
+        }
+        
+        long GetUInt32_value() const {
+            return _int64_value;
         }
 
         int64_t GetInt64_value() const {
@@ -78,8 +91,12 @@ namespace kt {
             return _uint64_value;
         }
 
+        std::vector<char>& GetOctets_value() {
+            return _octets_value;
+        }
+
         static field_value_t value_of(long value, field_enum_type_t type);
-        
+        static field_value_t value_of(double value, field_enum_type_t type);
         static field_value_t value_of(char value) {
             field_value_t des_field_value(field_enum_type_t::CHAR);
             des_field_value._int8_value = value;
@@ -130,8 +147,10 @@ namespace kt {
         int32_t _int32_value;
         int64_t _int64_value;
         std::string _string_value;
-        field_struct_t* _field_struct;
+        //field_struct_t* _field_struct;
+        std::shared_ptr<field_struct_t> _field_struct;
         std::vector<field_value_t> _field_values;
+        std::vector<char> _octets_value;
         float _real32_value;
         double _real64_value;
         uint64_t _uint64_value;
